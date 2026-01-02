@@ -56,10 +56,13 @@ def home(request):
 def all_product(request,slug=None,id=None):
     products = Product.objects.all()
     variant = Variants.objects.all()
-    min =Product.objects.aggregate(unit_price =Min('unit_price'))
-    min_price = int(min['unit_price'])
-    max = Product.objects.aggregate(unit_price=Max('unit_price'))
-    max_price = int(max['unit_price'])
+    price_agg = Product.objects.aggregate(
+    min_price=Min('unit_price'),
+    max_price=Max('unit_price'),)
+
+    min_price = int(price_agg.get('min_price') or 0)
+    max_price = int(price_agg.get('max_price') or 0)
+
     filter = ProductFilter(request.GET,queryset=products)
     products = filter.qs
     paginator = Paginator(products,8)
