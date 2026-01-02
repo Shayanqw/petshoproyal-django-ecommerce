@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'body.css' %}">
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="enamad" content="73263192"/>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}">
+
+<!-- Preloader to increase Performance -->
+    <link
+      rel="preload"
+      as="image"
+      href="{% static 'assets/images/slider/slide 1.png' %}"
+      imagesrcset="
+        {% static 'assets/images/slider/slide 1.png' %} 1x,
+        {% static 'assets/images/slider/slide2.png' %} 2x
+        {% static 'assets/images/slider/slide 3.png' %} 3x
+        {% static 'assets/images/slider/slide4.png' %} 4x
+      "
+      imagesizes="100vw"
+    />
+
+    <!-- Vendor CSS (Icon Font) -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/fontawesome.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/simple-line-icons.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/themify-icons-min.css' %}"/>
+
+
+
+
+    <!-- Plugins CSS (All Plugins Files) -->
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/swiper-bundle.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/lightgallery.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/aos.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/nice-select.min.css' %}"/>
+    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/persian-date.js' %}"></script>
+    <script src="{% static 'assets/js/persian-date.min.js' %}"></script>
+    <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.js"></script>
+    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-element-bundle.min.js"></script>
+
+
+
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}"/>
+
+    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">#}
+    {#    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">#}
+    {#    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>#}
+
+    {% block css %}{% endblock %}
+    {#     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css"/>#}
+
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>#}
+
+
+    {#    <link rel='stylesheet' href='https://sachinchoolur.github.io/lightslider/dist/css/lightslider.css'>#}
+
+</head>
+<body class="main">
+{% include 'navbar.html' %}
+{% include 'message.html' %}
+
+{% block body %}{% endblock %}
+
+
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>#}
+
+{% block script %}{% endblock %}
+{#    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>#}
+
+{% include 'footer.html' %}
+
+
+<!-- Global Vendor, plugins JS -->
+
+<!-- Vendor JS -->
+
+
+<script src="{% static 'assets/js/vendor/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/bootstrap.min.js' %}"></script>
+{#<script src="{% static 'assets/js/vendor/jquery-3.6.0.min.js' %}"></script>#}
+<script src="{% static 'assets/js/vendor/jquery-migrate-3.3.2.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/modernizr-3.11.2.min.js' %}"></script>
+
+
+<!-- Plugins JS -->
+
+
+<script src="{% static 'assets/js/plugins/aos.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/jquery.ajaxchimp.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/jquery-ui.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/nice-select.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/countdown.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/lightgallery-all.min.js' %}"></script>
+
+
+<!-- Use the minified version files listed below for better performance and remove the files listed above -->
+
+<!--
+<script src="assets/js/vendor.min.js"></script>
+<script src="assets/js/plugins.min.js"></script>
+-->
+<script>
+    function getParentLang(node) { var defaultLang = 'fa'; var currLang = null; while(currLang === null && node.parentNode) { if (node.getAttribute && node.getAttribute('lang')) { currLang = node.getAttribute('lang'); } node = node.parentNode; } return currLang || defaultLang; } function TraceNodes(e) { if (e.nodeType == 3 && getParentLang(e) === 'fa' /* Persian */) { e.nodeValue = e.nodeValue.toPersianDigit(); } else { for (var t = 0; t < e.childNodes.length; t++) { TraceNodes(e.childNodes[t]); } } } String.prototype.toPersianDigit = function(e) { return this.replace(/\d+/g, function(t) { var n = [], r = []; for (var i = 0; i < t.length; i++) { n.push(t.charCodeAt(i)) } for (var s = 0; s < n.length; s++) { r.push(String.fromCharCode(n[s] + (!!e && e == true ? 1584 : 1728))) } return r.join("") }) }; TraceNodes(document);
+</script>
+<!--Main JS-->
+<script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

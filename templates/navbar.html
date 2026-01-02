@@ -1,0 +1,323 @@
+{% load static %}
+
+<!-- Header Section Start -->
+<div class="header section">
+
+    <!-- Header Top Start -->
+    <!--<div class="header-top bg-primary">-->
+    <!--    <div class="container">-->
+    <!--        <div class="row align-items-center">-->
+
+                <!-- Header Top Message Start -->
+    <!--            <div class="col-12 col-lg-6">-->
+    <!--                <div class="header-top-msg-wrapper">-->
+    <!--                    <p class="header-top-message">خوش آمدید</p>-->
+    <!--                </div>-->
+    <!--            </div>-->
+
+
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+    <!-- Header Top End -->
+
+    <!-- Header Bottom Start -->
+        <div class="header-sticky">
+            <div class="container">
+                <div class="row align-items-center position-relative">
+
+                    <!-- Header Logo Start -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="header-logo">
+                            <a href="{% url 'home:home' %}"><img src="{% static 'assets/images/logo/logo.png' %}"
+                                                                 alt="Site Logo"/></a>
+                        </div>
+                    </div>
+                    <!-- Header Logo End -->
+
+                    <!-- Header Menu Start -->
+                    <div class="col-lg-8 d-none d-lg-block">
+                        <div class="main-menu">
+                            <ul>
+                                <li class="has-children">
+                                    <a href="{% url 'home:home' %}">خانه</a>
+                                </li>
+                                {% for data in category %}
+                                    <li class="has-children">
+                                        <a href="#">{{ data.name }} </a>
+                                        <ul class="sub-menu">
+                                            {% for info in data.sub.all %}
+                                                <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+
+
+{#                                <li class="has-children position-static">#}
+{#                                    <a href="{% url 'home:product' %}">فروشگاه</a>#}
+{#                                </li>#}
+                                <li class="has-children">
+                                    <a href="{% url 'home:blog_list' %}">آموزش</a>
+                                </li>
+                                <li><a href="{% url 'home:about' %}">درباره ما</a></li>
+                                <li><a href="{% url 'home:contact' %}">تماس با ما</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Header Menu End -->
+
+                    <!-- Header Action Start -->
+                    <div class="col-lg-2 col-md-8 col-6">
+                        <div class="header-actions">
+                            {% if user.is_authenticated %}
+                                <!-- Header My Account Button Start -->
+                                <a href="{% url 'accounts:profile' %}"
+                                   class="header-action-btn header-action-btn-wishlist" title="پنل کاربری">
+                                    <i class="icon-user icons"></i>
+                                </a>
+                                <!-- Header My Account Button End -->
+                            {% else %}
+                                <!-- Header My Account Button Start -->
+                                <a href="{% url 'accounts:login' %}"
+                                   class="header-action-btn header-action-btn-wishlist" title="ورود">
+                                    <i class="icon-user icons"></i>
+                                </a>
+                                <!-- Header My Account Button End -->
+                            {% endif %}
+
+
+                            <!-- Header Action Button Start -->
+                            <div class="header-action-btn header-action-btn-cart d-none d-sm-flex">
+                                <a class="cart-visible"
+                                        {#                                   href="javascript:void(0)"#}
+                                        {% if user.is_authenticated %}
+                                   href="{% url 'cart:details' %}" title="سبد خرید"
+
+                                        {% else %}
+                                   href="{% url 'accounts:login' %}" title="سبد خرید"
+
+                                        {% endif %}
+                                >
+                                    <i class="icon-handbag icons"></i>
+                                    <span class="header-action-num align-items-center justify-content-center d-flex"
+                                          id="cart-count-badge"></span>
+                                </a>
+
+                                {#                                <!-- Header Cart Content Start -->#}
+                                {#                                <div class="header-cart-content">#}
+                                {##}
+                                {#                                    <!-- Cart Procut Wrapper Start  -->#}
+                                {#                                    <div class="cart-product-wrapper">#}
+                                {##}
+                                {#                                        <!-- Cart Product/Price Start -->#}
+                                {#                                        <div class="cart-product-inner mb-4 pb-4 border-bottom">#}
+                                {##}
+                                {#                                            <!-- Single Cart Product Start -->#}
+                                {#                                            <div class="single-cart-product">#}
+                                {#                                                <div class="cart-product-thumb">#}
+                                {#                                                    <a href="single-product.html"><img#}
+                                {#                                                            src="assets/images/header/header-cart/1.png"#}
+                                {#                                                            alt="Cart Product"></a>#}
+                                {#                                                </div>#}
+                                {#                                                <div class="cart-product-content">#}
+                                {#                                                    <h3 class="title"><a href="single-product.html">Basic Dog#}
+                                {#                                                        Trainning</a></h3>#}
+                                {#                                                    <div class="product-quty-price">#}
+                                {#                                                        <span class="cart-quantity">Qty: <strong#}
+                                {#                                                                class="text-primary"> 1 </strong></span>#}
+                                {#                                                        <span class="price">#}
+                                {#															<span class="new">$70.00</span>#}
+                                {#                                                            </span>#}
+                                {#                                                    </div>#}
+                                {#                                                </div>#}
+                                {#                                            </div>#}
+                                {#                                            <!-- Single Cart Product End -->#}
+                                {##}
+                                {#                                            <!-- Product Remove Start -->#}
+                                {#                                            <div class="cart-product-remove">#}
+                                {#                                                <a href="#/"><i class="icon-close"></i></a>#}
+                                {#                                            </div>#}
+                                {#                                            <!-- Product Remove End -->#}
+                                {##}
+                                {#                                        </div>#}
+                                {#                                        <!-- Cart Product/Price End -->#}
+                                {##}
+                                {#                                        <!-- Cart Product/Price Start -->#}
+                                {#                                        <div class="cart-product-inner mb-4 pb-4 border-bottom">#}
+                                {##}
+                                {#                                            <!-- Single Cart Product Start -->#}
+                                {#                                            <div class="single-cart-product">#}
+                                {#                                                <div class="cart-product-thumb">#}
+                                {#                                                    <a href="single-product.html"><img#}
+                                {#                                                            src="assets/images/header/header-cart/2.png"#}
+                                {#                                                            alt="Cart Product"></a>#}
+                                {#                                                </div>#}
+                                {#                                                <div class="cart-product-content">#}
+                                {#                                                    <h3 class="title"><a href="single-product.html">Wait, You Need#}
+                                {#                                                        This</a></h3>#}
+                                {#                                                    <div class="product-quty-price">#}
+                                {#                                                        <span class="cart-quantity">Qty: <strong#}
+                                {#                                                                class="text-primary"> 1 </strong></span>#}
+                                {#                                                        <span class="price">#}
+                                {#															<span class="new">$80.00</span>#}
+                                {#                                                            </span>#}
+                                {#                                                    </div>#}
+                                {#                                                </div>#}
+                                {#                                            </div>#}
+                                {#                                            <!-- Single Cart Product End -->#}
+                                {##}
+                                {#                                            <!-- Product Remove Start -->#}
+                                {#                                            <div class="cart-product-remove">#}
+                                {#                                                <a href="#/"><i class="icon-close"></i></a>#}
+                                {#                                            </div>#}
+                                {#                                            <!-- Product Remove End -->#}
+                                {##}
+                                {#                                        </div>#}
+                                {#                                        <!-- Cart Product/Price End -->#}
+                                {##}
+                                {#                                    </div>#}
+                                {#                                    <!-- Cart Procut Wrapper -->#}
+                                {##}
+                                {#                                    <!-- Cart Product Total Start -->#}
+                                {#                                    <div class="cart-product-total mb-4 pb-4 border-bottom">#}
+                                {#                                        <span class="value">Total</span>#}
+                                {#                                        <span class="price">200$</span>#}
+                                {#                                    </div>#}
+                                {#                                    <!-- Cart Product Total End -->#}
+                                {##}
+                                {#                                    <!-- Cart Product Button Start -->#}
+                                {#                                    <div class="cart-product-btn mt-4">#}
+                                {#                                        <a href="cart.html" class="btn btn-outline-light btn-hover-primary w-100">View#}
+                                {#                                            cart</a>#}
+                                {#                                        <a href="checkout.html"#}
+                                {#                                           class="btn btn-outline-light btn-hover-primary w-100 mt-4">Checkout</a>#}
+                                {#                                    </div>#}
+                                {#                                    <!-- Cart Product Button End -->#}
+                                {##}
+                                {#                                </div>#}
+                                {#                                <!-- Header Cart Content End -->#}
+
+                            </div>
+                            <div class="header-action-btn header-action-btn-cart d-flex d-sm-none">
+                                <a
+                                        {% if user.is_authenticated %}
+                                   href="{% url 'cart:details' %}" title="سبد خرید"
+
+                                        {% else %}
+                                   href="{% url 'accounts:login' %}" title="سبد خرید"
+
+                                        {% endif %}
+                                >
+                                    <i class="icon-handbag icons"></i>
+                                    <span class="header-action-num" id="cart-count-badge-sm"></span>
+                                </a>
+                            </div>
+                            <!-- Add this inside the "header-actions" div, before the existing actions -->
+                            <div class="header-contact-info d-none d-md-flex align-items-center me-4">
+                                <div class="contact-text text-end border-end border-2 border-primary pe-3 me-3">
+                                    <span class="d-block fw-bold">با ما تماس بگیرید!</span>
+                                    <span class="d-block text-nowrap">۰۹۱۹-۸۷۷-۱۰۱۷</span>
+                                </div>
+                            </div>
+                            <!-- Header Action Button End -->
+
+                            <!-- Mobile Menu Hambarger Action Button Start -->
+                            <a href="javascript:void(0)"
+                               class="header-action-btn header-action-btn-menu d-lg-none d-md-flex">
+                                <i class="icon-menu"></i>
+                            </a>
+                            <!-- Mobile Menu Hambarger Action Button End -->
+
+                        </div>
+                    </div>
+                    <!-- Header Action End -->
+
+                </div>
+            </div>
+        </div>
+    <!-- Header Bottom End -->
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        const badge = $('#cart-count-badge');
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'cart:cart-count' %}",
+            success: function (data) {
+                if (data.count == 0) {
+                    badge.removeClass('header-action-num')
+                }else {
+                    badge.addClass('header-action-num')
+                    badge.text(data.count);
+
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    });
+
+
+    $(document).ready(function () {
+        const badge = $('#cart-count-badge-sm');
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'cart:cart-count' %}",
+            success: function (data) {
+                if (data.count == 0) {
+                    badge.removeClass('header-action-num')
+                }else {
+                    badge.addClass('header-action-num')
+                    badge.text(data.count);
+
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    });
+</script>
+<!-- Header Section End -->
+
+
+{#<link rel="stylesheet" href="{% static 'nav.css' %}">#}
+{#<div class="nav">#}
+{#    <div class="container">#}
+{#        <ul>#}
+{#            <li><a href="{% url 'home:home' %}">Home</a></li>#}
+{#            <li><a href="{% url 'home:product' %}">Product</a></li>#}
+{#            <li><a href="{% url 'cart:' %}">Cart{{ nums }}</a></li>#}
+{#            <li>category#}
+{#                <ul>#}
+{#                    {% for cat in category %}#}
+{#                        <li><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>#}
+{#                            <ul>#}
+{#                                {% for data in cat.sub.all %}#}
+{#                                    <li><a href="{{ data.get_absolute_url }}">{{ data.name }}</a>#}
+{#                                        <ul>#}
+{#                                            {% for i in data.sub.all %}#}
+{#                                            <li><a href="{{ i.get_absolute_url }}">{{ i.name }}</a></li>#}
+{#                                        {% endfor %}#}
+{#                                        </ul>#}
+{#                                    </li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        </li>#}
+{#                    {% endfor %}#}
+{#                </ul>#}
+{#            </li>#}
+{#        </ul>#}
+{##}
+{#    <form class="form-inline float-sm-right" action="{% url 'home:product' %}">#}
+{#          <input class="form-control" type="search" placeholder="Search" name="search">#}
+{#            <input type="submit" value="search" class="btn btn-danger">#}
+{#    </form>#}
+{#    </div>#}
+{#</div>#}

@@ -1,0 +1,771 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    سبد خرید
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+{% endblock %}
+
+{% block body %}
+    <!-- Shopping Cart Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Cart Table Start -->
+                    <div class="cart-table table-responsive">
+                        <table class="table table-bordered">
+
+                            <!-- Table Head Start -->
+                            <thead>
+                            <tr>
+                                <th class="pro-thumbnail">تصویر</th>
+                                <th class="pro-title">نام محصول</th>
+                                <th class="pro-price">قیمت</th>
+                                <th class="pro-quantity">قیمت نهایی</th>
+                                <th class="pro-subtotal">تعداد</th>
+                                <th class="pro-remove">حذف</th>
+                            </tr>
+                            </thead>
+                            <!-- Table Head End -->
+
+                            <!-- Table Body Start -->
+                            <tbody>
+                            {% for c in cart %}
+                                <tr class="product_data">
+                                    <td class="pro-thumbnail"><a href="#"><img class="fit-image"
+                                                                               src="{{ c.variant.product_variant.image.url }}"
+                                                                               alt="{{ c.variant.product_variant.name }}"/></a>
+                                    </td>
+                                    <td class="pro-title"><a href="#">{{ c.variant.product_variant.name }}</a></td>
+                                    <td class="pro-price"><span class="total_price price"
+                                                                onchange="multiply();">{{ c.variant.total_price }}</span>
+                                        تومان
+                                    </td>
+                                    <td class="pro-subtotal"><span class="final_price price">
+                                        {% if c.product.status != 'None' %}
+                                            {{ c.all_price }}
+                                        {% else %}
+                                            {{ c.product.total_price }}
+                                        {% endif %}
+                                    </span> تومان
+                                    </td>
+                                    <td class="pro-quantity">
+                                        <div class="quantity d-flex flex-row justify-content-center align-items-center">
+                                            {#                                             <div class="cart-plus-minus">#}
+                                            {#                                            <div class="btn btn-hover-primary p-2" onclick="add('{{ c.variant.id }}')">#}
+                                            {#                                                +#}
+                                            {#                                            </div>#}
+
+
+                                            <input type="hidden" class="prod_id" value="{{ c.variant.id }}">
+                                            {% csrf_token %}
+                                            <input id="input" onchange="multiply();"
+                                                    {#                                                    id="inputnew{{ c.variant.id }}"#}
+                                                   value="{{ c.quantity }}" type="number" max="{{ c.variant.amount }}"
+                                                   readonly min="1"
+                                                   class="text-center btn qty-input">
+
+
+                                            {#                                            <div class="btn btn-hover-primary p-2"#}
+                                            {#                                                 onclick="remove('{{ c.variant.id }}')">-#}
+                                            {#                                            </div>#}
+                                            {#                                             </div>#}
+                                        </div>
+                                    </td>
+                                    <td class="pro-remove"><a href="{% url 'cart:remove' c.id %}"><i
+                                            class="ti-trash"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <!-- Table Body End -->
+
+                        </table>
+                    </div>
+                    <!-- Cart Table End -->
+
+                    <!-- Cart Button Start -->
+                    <div class="cart-button-section mb-n4">
+
+                        <!-- Cart Button left Side Start -->
+                        <div class="cart-btn-lef-side mb-4">
+                            <a href="{% url 'home:product' %}" class="btn btn btn-gray-deep btn-hover-primary">رفتن به
+                                فروشگاه</a>
+                        </div>
+                        <!-- Cart Button left Side End -->
+
+
+                    </div>
+                    <!-- Cart Button End -->
+
+                </div>
+            </div>
+
+            <div class="row mt-10">
+                <div class="col-lg-12 col-12 mb-4">
+
+                    <!-- Checkbox Form Start -->
+                    <form method="post" action="{% url 'order:order_create' %}">
+                        {% csrf_token %}
+                        {#                        {{ form.as_p }}#}
+                        <div class="checkbox-form">
+
+                            <!-- Checkbox Form Title Start -->
+                            <h3 class="title" style="font-family: Raleway-bold !important;">اطلاعات گیرنده</h3>
+                            <!-- Checkbox Form Title End -->
+
+                            <div class="row">
+
+                                <!-- First Name Input Start -->
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>نام <span class="required">*</span></label>
+                                        <input required name="f_name" type="text" class="form-control"
+                                               id="exampleFormControlInput1" value="{{ user.first_name }}">
+                                    </div>
+                                </div>
+                                <!-- First Name Input End -->
+
+                                <!-- Last Name Input Start -->
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>نام خانوادگی<span class="required">*</span></label>
+                                        <input required name="l_name" type="text" class="form-control"
+                                               id="exampleFormControlInput1" value="{{ user.last_name }}">
+                                    </div>
+                                </div>
+                                <!-- Last Name Input End -->
+
+
+                                <!-- Address Input Start -->
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>آدرس <span class="required">*</span></label>
+                                        <textarea required name="address" class="form-control"
+                                                  id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <!-- Address Input End -->
+
+
+                                <!-- Postcode or Zip Input Start -->
+                                {#                                <div class="col-md-6">#}
+                                {#                                    <div class="checkout-form-list">#}
+                                {#                                        <label>کد پستی <span class="required"></span></label>#}
+                                {#                                        <input name="zipcode" placeholder="وارد کردن کد پستی اختیاری است . " maxlength="10" minlength="10"#}
+                                {#                                               type="text">#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <!-- Postcode or Zip Input End -->
+
+                                <!-- Email Address Input Start -->
+                                {#                                <div class="col-md-6">#}
+                                {#                                    <div class="checkout-form-list">#}
+                                {#                                        <label>ایمیل <span class="required"></span></label>#}
+                                {#                                        <input name="email" type="email" class="form-control"#}
+                                {#                                               id="exampleFormControlInput1" placeholder="وارد کردن ایمیل اختیاری است . " value="{{ user.email }}">#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                <!-- Email Address Input End -->
+                                <!-- Email Address Input Start -->
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>شماره همراه <span class="required">*</span></label>
+                                        <input required name="phone" type="text" class="form-control"
+                                               id="id_phone">
+                                    </div>
+                                </div>
+                                <!-- Email Address Input End -->
+                                
+                                <div class="col-md-12 d-flex justify-content-center align-items-center flex-column flex-lg-row my-1">
+                                        <span class="text-center">حتما باید استان و شهر خود را انتخاب کنید و بعد روی دکمه ثبت سفارش کلیک کنید.</br> در صورتی که ساکن تهران هستید ، لطفا پس از انتخاب شهر تهران ، ساعت حدودی دریافت محصوله را مشخص کنید.</span>
+                                </div>
+                                <div class="col-md-12 d-flex justify-content-center align-items-center flex-column flex-lg-row">
+                                    <!-- province Input Start -->
+                                    <div class="mx-1 my-1">
+                                        <div class="ui selection dropdown" id="provinces">
+                                            <input type="hidden" name="province">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">استان</div>
+                                            <div class="menu" id="provinces-data-box"></div>
+                                        </div>
+                                    </div>
+                                    <!-- city Input End -->
+                                    <div class="mx-1 my-1">
+                                        <div class="ui selection dropdown" id="cities">
+                                            <input type="hidden" name="city" id="s_city">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text" id="city-text">شهر</div>
+                                            <div class="menu" id="cities-data-box"></div>
+                                        </div>
+                                    </div>
+                                    <!-- city Input End -->
+                                    <select class="selection dropdown mx-1 my-1 border border-1 border p-2" name="hours" id="hours" style="display: none ; font-family: Raleway-bold; border-radius: 5%">
+                                        {% for h in hours %}
+                                                    <option class="btn" value="{{ h.id }}"
+                                                    {% if forloop.first %}selected{% endif %}>{{ h.from_hour }}-{{ h.to_hour }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    
+
+
+                                </div>
+
+                                <!--<div class="col-md-6 d-flex justify-content-right align-items-center flex-column flex-lg-row my-2 gap-3" id="delivery_div" style="display: none">-->
+                                <!--    <div>-->
+                                <!--        <label for="tipax">ارسال با تیپاکس (پس کرایه)</label>-->
+                                <!--        <input type="radio" name="delivery" id="tipax" value="tipax">-->
+                                <!--    </div>-->
+                                    
+                                <!--    <div>-->
+                                <!--        <label for="post">ارسال با پست</label>-->
+                                <!--        <input checked type="radio" name="delivery" id="post" value="post">-->
+                                <!--    </div>-->
+                                    
+                                <!--</div>-->
+                                <div class="col-md-12 mx-auto my-3" id="delivery_div" style="display: none">
+                                    <label class="mx-2" for="post">ارسال با پست</label>
+                                    <input class="mx-1" checked type="radio" name="delivery" id="post" value="post">
+                                    
+                                    <label class="mx-2" for="tipax">ارسال با تیپاکس (پس کرایه)</label>
+                                    <input class="mx-1" type="radio" name="delivery" id="tipax" value="tipax">
+                                </div>
+
+
+                                <div class="col-md-12 mx-auto my-3" id="payment_div" style="display: none">
+                                    <label class="mx-2" for="post">درگاه انلاین</label>
+                                    <input class="mx-1" checked type="radio" name="payment_method" id="online" value="1">
+                                    
+                                    <label class="mx-2" for="tipax">پرداخت درب منزل </label>
+                                    <input class="mx-1" type="radio" name="payment_method" id="door" value="2">
+
+                                    <label class="mx-2" for="tipax">کارت به کارت  </label>
+                                    <input class="mx-1" type="radio" name="payment_method" id="cart_to_cart" value="3">
+                                </div>
+
+                            </div>
+                            <!-- Cart Checktout Button Start -->
+                            <button type="submit" class="btn btn btn-gray-deep btn-hover-primary mt-6"
+                                    style="font-family: Raleway !important;">
+                                ثبت سفارش
+                            </button>
+                            <!-- Cart Checktout Button End -->
+                    </form>
+                    <!-- Checkbox Form End -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Shopping Cart Section End -->
+
+
+
+
+
+
+    <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+    <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-menu-wrapper">
+                    <div class="offcanvas-overlay"></div>
+
+                    <!-- Mobile Menu Inner Start -->
+                    <div class="mobile-menu-inner">
+
+                        <!-- Button Close Start -->
+                        <div class="offcanvas-btn-close">
+                            <i class="fa fa-times"></i>
+                        </div>
+                        <!-- Button Close End -->
+
+                        <!-- Mobile Menu Inner Wrapper Start -->
+                        <div class="mobile-menu-inner-wrapper">
+
+
+                            <!-- Mobile Menu Start -->
+                            <div class="mobile-navigation">
+                                <nav>
+                                    <ul class="mobile-menu">
+                                        <li class="has-children">
+                                            <a href="{% url 'home:home' %}">خانه </a>
+                                        </li>
+                                        {% for data in category %}
+                                            <li class="has-children">
+                                                <a href="#"> {{ data.name }}<i class="fa fa-angle-down"
+                                                                               aria-hidden="true"></i></a>
+                                                <ul class="dropdown">
+                                                    {% for info in data.sub.all %}
+                                                        <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endfor %}
+                                        {#                            <li class="has-children">#}
+                                        {#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+                                        {#                            </li>#}
+                                        <li class="has-children">
+                                            <a href="{% url 'home:blog_list' %}">آموزش</a>
+                                        </li>
+                                        <li class="has-children">
+                                            <a href="{% url 'home:about' %}">درباره ما</a>
+                                        </li>
+                                        <li class="has-children">
+                                            <a href="{% url 'home:contact' %}">تماس با ما</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- Mobile Menu End -->
+
+
+                            <!-- Contact Links/Social Links Start -->
+                            <div class="mt-auto bottom-0">
+
+                                <!-- Contact Links Start -->
+                                <ul class="contact-links">
+                                    <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                                    <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1">
+                                        petshoproyal.co@gmail.com</a></li>
+                                    <li><i class="fa fa-clock-o"></i> <span
+                                            class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                                </ul>
+                                <!-- Contact Links End -->
+
+                                <!-- Social Widget Start -->
+                                <div class="widget-social">
+                                    <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                                    <a title="Instagram" href="https://instagram.com/petshop_royal1"><i
+                                            class="icon-social-instagram"></i></a>
+                                    <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                                </div>
+                                <!-- Social Widget Ender -->
+                            </div>
+                            <!-- Contact Links/Social Links End -->
+                        </div>
+                        <!-- Mobile Menu Inner Wrapper End -->
+
+                    </div>
+                    <!-- Mobile Menu Inner End -->
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i
+                                class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"></script>
+    {#    <script src="{% static 'assets/js/cart/cart.js' %}"></script>#}
+    <script>
+        $('.ui.dropdown').dropdown({
+            forceSelection: false
+        });
+    </script>
+
+    <script>
+
+        const provincesDataBox = document.getElementById('provinces-data-box')
+        const provinceInput = document.getElementById('provinces')
+
+        const citiesDataBox = document.getElementById('cities-data-box')
+        const cityInput = document.getElementById('cities')
+
+        const hoursDataBox = document.getElementById('hours-data-box')
+        const hourInput = document.getElementById('hours')
+
+        const cityText = document.getElementById('city-text')
+
+        //provinces-json
+        $.ajax({
+            type: 'GET',
+            url: '{% url "cart:provinces-json" %}',
+            success: function (responce) {
+                const provincesData = responce.data
+                provincesData.map(item => {
+                    const option = document.createElement('div')
+                    option.textContent = item.name
+                    option.setAttribute('class', 'item')
+                    option.setAttribute('data-value', item.id)
+                    provincesDataBox.appendChild(option)
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+
+        provinceInput.addEventListener('change', e => {
+            const selectedProvince = e.target.value
+
+            citiesDataBox.innerHTML = ''
+            cityText.textContent = 'شهر'
+            cityText.classList.add('default')
+
+
+            $.ajax({
+                type: 'GET',
+                url: `city-json/${selectedProvince}/`,
+                success: function (responce) {
+                    const citiesData = responce.data
+                    citiesData.map(item => {
+                        const option = document.createElement('div')
+                        option.textContent = item.name
+                        option.setAttribute('class', 'item')
+                        option.setAttribute('data-value', item.id)
+                        citiesDataBox.appendChild(option)
+                    })
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        })
+
+        cityInput.addEventListener('change', e => {
+            const hours = document.getElementById('hours')
+            const delivery = document.getElementById('delivery_div')
+            payment_method=document.getElementById("payment_div")
+
+            if (e.target.value === '1') {
+                hours.style.display = 'inline'
+                delivery.style.display = 'none'
+                payment_method.style.display = 'inline'
+            } else {
+                hours.style.display = 'none'
+                hours.value = '0'
+                delivery.style.display = 'inline'
+                payment_method.style.display = 'none'
+            }
+        })
+    </script>
+
+
+
+
+
+    <script> //nice number
+    (function ($) {
+        $.fn.niceNumber = function (options) {
+            var defaults = {
+                autoSize: true,
+                autoSizeBuffer: 1,
+                buttonDecrement: '-',
+                buttonIncrement: '+',
+                buttonPosition: 'around',
+
+                /**
+                 callbackFunction
+                 @param {$input} currentInput - the input running the callback
+                 @param {number} amount - the amount after increase/decrease
+                 @param {object} settings - the passed niceNumber settings
+                 **/
+                onDecrement: false,
+                onIncrement: false,
+            };
+            var settings = $.extend(defaults, options);
+
+            return this.each(function () {
+                var currentInput = this,
+                    $currentInput = $(currentInput),
+                    maxValue = $currentInput.attr('max'),
+                    minValue = $currentInput.attr('min'),
+                    attrMax = null,
+                    attrMin = null;
+
+                // Skip already initialized input
+                if ($currentInput.attr('data-nice-number-initialized')) return;
+
+                // Handle max and min values
+                if (
+                    maxValue !== undefined &&
+                    maxValue !== false
+                ) {
+                    attrMax = parseFloat(maxValue);
+                }
+
+                if (
+                    minValue !== undefined &&
+                    minValue !== false
+                ) {
+                    attrMin = parseFloat(minValue);
+                }
+
+                // Fix issue with initial value being < min
+                if (attrMin && !currentInput.value) {
+                    $currentInput.val(attrMin);
+                }
+
+                // Generate container
+                var $inputContainer = $('<div/>', {
+                    class: 'nice-number',
+                }).insertAfter(currentInput);
+
+                // Generate interval (object so it is passed by reference)
+                var interval = {};
+
+                // Generate buttons
+                var $minusButton = $('<button/>')
+                    .attr('type', 'button').attr('class', 'changeQuantity btn btn-hover-primary p-2 ')
+                    .html(settings.buttonDecrement)
+                    .on('mousedown mouseup mouseleave', function (event) {
+                        changeInterval(event.type, interval, function () {
+                            var currentValue = parseFloat($currentInput.val() || 0);
+                            if (
+                                attrMin == null ||
+                                attrMin < currentValue
+                            ) {
+                                var newValue = currentValue - 1;
+                                $currentInput.val(newValue);
+                                if (settings.onDecrement) {
+                                    settings.onDecrement(
+                                        $currentInput,
+                                        newValue,
+                                        settings
+                                    );
+                                }
+                            }
+                        });
+
+                        // Trigger the input event here to avoid event spam
+                        if (event.type == 'mouseup' || event.type == 'mouseleave') {
+                            $currentInput.trigger('input');
+                        }
+                    });
+
+                var $plusButton = $('<button/>')
+                    .attr('type', 'button').attr('class', 'changeQuantity btn btn-hover-primary p-2 ')
+                    .html(settings.buttonIncrement)
+                    .on('mousedown mouseup mouseleave', function (event) {
+                        changeInterval(event.type, interval, function () {
+                            var currentValue = parseFloat($currentInput.val() || 0);
+                            if (
+                                attrMax == null ||
+                                attrMax > currentValue
+                            ) {
+                                var newValue = currentValue + 1;
+                                $currentInput.val(newValue);
+                                if (settings.onIncrement) {
+                                    settings.onIncrement(
+                                        $currentInput,
+                                        newValue,
+                                        settings
+                                    );
+                                }
+                            }
+                        });
+
+                        // Trigger the input event here to avoid event spam
+                        if (event.type == 'mouseup' || event.type == 'mouseleave') {
+                            $currentInput.trigger('input');
+                        }
+                    });
+
+                // Remember that we have initialized this input
+                $currentInput.attr('data-nice-number-initialized', true);
+
+                // Append elements
+                switch (settings.buttonPosition) {
+                    case 'left':
+                        $minusButton.appendTo($inputContainer);
+                        $plusButton.appendTo($inputContainer);
+                        $currentInput.appendTo($inputContainer);
+                        break;
+                    case 'right':
+                        $currentInput.appendTo($inputContainer);
+                        $minusButton.appendTo($inputContainer);
+                        $plusButton.appendTo($inputContainer);
+                        break;
+                    case 'around':
+                    default:
+                        $plusButton.appendTo($inputContainer);
+                        $currentInput.appendTo($inputContainer);
+                        $minusButton.appendTo($inputContainer);
+
+                        break;
+                }
+
+                // Nicely size input
+                if (settings.autoSize) {
+                    $currentInput.width(
+                        $currentInput.val().length + settings.autoSizeBuffer + 'ch'
+                    );
+                    $currentInput.on('keyup input', function () {
+                        $currentInput.animate(
+                            {
+                                width:
+                                    $currentInput.val().length +
+                                    settings.autoSizeBuffer +
+                                    'ch'
+                            },
+                            200
+                        );
+                    });
+                }
+            });
+        };
+
+        function changeInterval(eventType, interval, callback) {
+            if (eventType == 'mousedown') {
+                interval.timeout = setTimeout(function () {
+                    interval.actualInterval = setInterval(function () {
+                        callback();
+                    }, 100);
+                }, 200);
+                callback();
+            } else {
+                if (interval.timeout) {
+                    clearTimeout(interval.timeout);
+                }
+                if (interval.actualInterval) {
+                    clearInterval(interval.actualInterval);
+                }
+            }
+        }
+    })(jQuery);
+    </script>
+
+    <script>
+        $('.qty-input').niceNumber({
+            autoSize: false,
+
+        });
+
+    </script>
+    <script src="{% static 'assets/js/persian.min.js' %}"></script>
+    <script>
+        function toEnglishDigits(str) {
+
+            // convert persian digits [۰۱۲۳۴۵۶۷۸۹]
+            var e = '۰'.charCodeAt(0);
+            str = str.replace(/[۰-۹]/g, function (t) {
+                return t.charCodeAt(0) - e;
+            });
+
+            // convert arabic indic digits [٠١٢٣٤٥٦٧٨٩]
+            e = '٠'.charCodeAt(0);
+            str = str.replace(/[٠-٩]/g, function (t) {
+                return t.charCodeAt(0) - e;
+            });
+            return str;
+        }
+
+
+        $('.changeQuantity').click(function (e) {
+            e.preventDefault()
+
+            let product_id = $(this).closest('.product_data').find('.prod_id').val()
+            let product_qty = $(this).closest('.product_data').find('.qty-input').val();
+            let token = $('input[name=csrfmiddlewaretoken]').val();
+
+            let total_price = $(this).closest('.product_data').find('.total_price').text()
+
+
+            String.prototype.toPersianDigits = function () {
+                var num_dic = {
+                    '۰': '0',
+                    '۱': '1',
+                    '۲': '2',
+                    '۳': '3',
+                    '۴': '4',
+                    '۵': '5',
+                    '۶': '6',
+                    '۷': '7',
+                    '۸': '8',
+                    '۹': '9',
+                }
+
+                return parseInt(this.replace(/[۰-۹]/g, function (w) {
+                    return num_dic[w]
+                }));
+            }
+
+            var total = total_price.toPersianDigits() * product_qty.toPersianDigit()
+
+            $(this).closest('.product_data').find('.final_price').html(persianJs(total_price.toPersianDigits() * product_qty.toPersianDigits()).englishNumber()['_str'])
+
+            $.ajax({
+                method: "POST",
+                url: "{% url 'cart:updatecart' %}",
+                data: {
+                    'product_id': product_id,
+                    'product_qty': product_qty,
+                    csrfmiddlewaretoken: token
+                },
+                success: function (response) {
+                    {#console.log('ok')#}
+                }
+            })
+        })
+
+
+    </script>
+
+    <script>
+        let prices = document.querySelectorAll(".price");
+        prices.forEach((price) => {
+            price.innerHTML = price.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        });
+    </script>
+{% endblock %}

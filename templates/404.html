@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block body %}
+     <!-- Error 404 Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Error Form Start -->
+                    <div class="error_form">
+                        <h1 class="title">404</h1>
+                        <h2 class="sub-title">خطا! صفحه پیدا نشد .</h2>
+                        <p>عذر میخواهیم ، صفحه ای که به دنبال آن هستید کار نمی کند ،<br> حذف شده یا نام آن تغییر کرده است و ما در حال بررسی این موضوع هستیم .</p>
+                        <a href="{% url 'home:home' %}" class="btn btn-primary btn-hover-dark rounded-0">بازگشت به خانه</a>
+                    </div>
+                    <!-- Error Form End -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Error 404 Section End -->
+{% endblock %}

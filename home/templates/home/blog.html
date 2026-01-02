@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block title %}
+    مقالات
+{% endblock %}
+{% load static %}
+{% block body %}
+    
+     <!-- Breadcrumb Area Start -->
+    <div class="section breadcrumb-area bg-bright">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="breadcrumb-wrapper">
+                        <h2 class="breadcrumb-title">مقالات</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb Area End -->
+
+    <!-- Blog Grid Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row row-cols-lg-3 row-cols-sm-2 row-cols-1 mb-n8">
+                {% for blog in blogs %}
+
+                <div class="col mb-8">
+                    <!-- Single Blog Start -->
+                    <div class="single-blog-wrapper">
+
+                        <!-- Blog Thumb Start -->
+                        <div class="blog-thumb thumb-effect">
+                            <a class="image" href="{% url 'home:blog_detail' blog.pk %}">
+                                <img class="fit-image" src="{{ blog.image.url }}" alt="{{ blog.title }}">
+                            </a>
+                        </div>
+                        <!-- Blog Thumb End -->
+
+                        <!-- Blog Content Start -->
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <ul>
+                                    <li><span>{{ blog.published_date }}</span></li>
+                                </ul>
+                            </div>
+                            <h2 class="blog-title"><a href="{% url 'home:blog_detail' blog.pk %}">{{ blog.title }}</a></h2>
+                            <p>{{ blog.description|truncatewords:20 }}</p>
+                            <a class="more-link" href="{% url 'home:blog_detail' blog.pk %}">خواندن مقاله</a>
+                        </div>
+                        <!-- Blog Content End -->
+
+                    </div>
+                    <!-- Single Blog End -->
+                </div>
+                {% endfor %}
+
+
+            </div>
+{#            <div class="row">#}
+{#                <div class="col-12 mt-10">#}
+{#                    <nav class="d-flex justify-content-center">#}
+{#                        <ul class="pagination">#}
+{#                            <li class="page-item"><a class="page-link active" href="#/">1</a></li>#}
+{#                            <li class="page-item"><a class="page-link" href="#/">2</a></li>#}
+{#                            <li class="page-item"><a class="page-link" href="#/">3</a></li>#}
+{#                            <li class="page-item">#}
+{#                                <a class="page-link rounded-0" href="#/" aria-label="Next">#}
+{#                                    <span aria-hidden="true">&raquo;</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </nav>#}
+{#                </div>#}
+{#            </div>#}
+        </div>
+    </div>
+    <!-- Blog Grid Section End -->
+    
+
+ <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+     <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="{% url 'home:blog_list' %}">آموزش</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+{% endblock %}

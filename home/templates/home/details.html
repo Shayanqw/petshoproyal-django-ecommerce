@@ -1,0 +1,1285 @@
+{% extends 'base.html' %}
+{% load jformat %}
+{% load static %}
+{% load humanize %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'home/css/test.css' %}">
+    <style>
+        .nice-number button {
+            transition: 0.3s;
+            padding: 8px 7px;
+            border-radius: 10%;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .nice-number button:hover {
+            background-color: #f6ab49;
+            color: #fff;
+        {#outline: 0.1px solid #DD5144;#}
+        }
+    </style>
+{% endblock %}
+{% block title %}
+    اطلاعات محصول
+{% endblock %}
+{% block body %}
+
+
+
+    <!-- Single Product Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-5 offset-lg-0 col-md-8 offset-md-2">
+
+                    <!-- Product Details Image Start -->
+                    <div class="product-details-img">
+
+                        <!-- Single Product Image Start -->
+                        <div class="single-product-img swiper-container product-gallery-top">
+
+                            <div class="swiper-wrapper popup-gallery">
+                                {% for i in images %}
+                                    <a class="swiper-slide w-100" href="{{ i.image.url }}">
+                                        <img class="w-100" src="{{ i.image.url }}" alt="{{ i.product.name }}">
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <!-- Single Product Image End -->
+
+                        <!-- Single Product Thumb Start -->
+                        <div class="single-product-thumb swiper-container product-gallery-thumbs">
+                            <div class="swiper-wrapper">
+                                {% for i in images %}
+                                    <div class="swiper-slide">
+                                        <img src="{{ i.image.url }}" alt="{{ i.product.name }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Next Previous Button Start -->
+                            <div class="swiper-button-next swiper-nav-button"><i class="ti-arrow-right"></i></div>
+                            <div class="swiper-button-prev swiper-nav-button"><i class="ti-arrow-left"></i></div>
+                            <!-- Next Previous Button End -->
+                        </div>
+                        <!-- Single Product Thumb End -->
+
+                    </div>
+                    <!-- Product Details Image End -->
+
+                </div>
+
+                <div class="col-lg-7">
+
+                    <!-- Product Summery Start -->
+                    <div class="product-summery position-relative border border-1 border-primary" style="border-radius: 2%">
+
+                        <!-- Product Head Start -->
+                        <div class="product-head mb-3 d-flex flex-row justify-content-between p-2" >
+                            <h2 class="product-title border-bottom border-2 border-primary p-2">{{ product.name }}</h2>
+                            <!-- Rating Start -->
+                            <span class="rating d-flex justify-content-end ms-3 mt-1">
+                                <i class="fa fa-star"></i>
+                                <span class="ml-1 font-weight-bold">{{ product.average }}</span>
+                            </span>
+                            <!-- Rating End -->
+                        </div>
+                        <!-- Product Head End -->
+
+
+                        <!-- Price Box Start -->
+                        <div class="price-box mb-2 d-flex flex-column border-bottom border-1 border-primary p-2">
+                            {% if variants.discount %}
+                                <span class="regular-price price">{{ variants.total_price }}  تومان </span>
+                                <span class="old-price price"><del class="text-danger">{{ variants.unit_price }}  تومان </del></span>
+                            {% else %}
+                                <span class="regular-price price">{{ variants.total_price }}  تومان </span>
+                            {% endif %}
+
+                        </div>
+                        <!-- Price Box End -->
+
+                        <!-- SKU Start -->
+                        <div class="product-inventroy mb-3 border-bottom border-1 border-primary p-2">
+                            <span class="inventroy-title"> <strong>برند</strong></span>
+                            <span class="inventory-varient">{{ product.brand }}</span>
+                        </div>
+                        <!-- SKU End -->
+
+                        <!-- Product Inventory Start -->
+                        <div class="product-inventroy mb-3 border-bottom border-1 border-primary p-2">
+                            <span class="inventroy-title"> <strong>موجود</strong></span>
+                            <span class="inventory-varient">{{ variants.amount }} باقی مانده در انبار</span>
+                        </div>
+                        <!-- Product Inventory End -->
+
+
+                    <!-- Product Inventory Start -->
+                        <div class="product-inventroy mb-3 border-bottom border-1 border-primary p-2">
+                            <span class="inventroy-title"> <strong>انقضاء</strong></span>
+                            <span class="inventory-varient">{{ product.expire|date:"Y-m-d" }} </span>
+                        </div>
+                        <!-- Product Inventory End -->
+
+                        <!-- Description Start -->
+                        <p class="desc-content mb-5 border-bottom border-1 border-primary p-2">{{ product.information }}</p>
+                        <!-- Description End -->
+
+
+                        <!-- Product Size Start -->
+                        <div class="product-size mb-4 border-bottom border-1 border-primary p-2">
+                            {% if product.status == 'Both' %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    {% for data in size %}
+                                        <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}
+                                               checked{% endif %} name="select" onchange="this.form.submit();">
+                                        <a href="" style="text-decoration: none">{{ data.size_variant }}</a>
+                                    {% endfor %}
+                                </form>
+                                <br>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    {% for data in colors %}
+                                        <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}
+                                               checked{% endif %} name="select" onchange="this.form.submit();">
+                                        <a href="" style="text-decoration: none">{{ data.color_variant }}</a>
+                                    {% endfor %}
+                                </form>
+                                <br>
+                            {% elif product.status == 'Size' %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <span><strong>وزن</strong></span>
+                                    {% for data in variant %}
+                                        <input type="radio" class="size-ratio" value="{{ data.id }}"
+                                                {% if variants.id == data.id %}
+                                               checked{% endif %}
+                                               name="select" onchange="this.form.submit();">
+                                        <a href="" style="text-decoration: none">{{ data.size_variant }}    </a>
+                                    {% endfor %}
+                                </form><br>
+                            {% elif product.status == 'Color' %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {% for data in variant %}
+                                        <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}
+                                               checked{% endif %}
+                                               name="select" onchange="this.form.submit()">
+                                        <a href="" style="text-decoration: none">{{ data.color_variant }}</a>
+                                    {% endfor %}
+                                </form>
+                            {% endif %}
+                        </div>
+                        <!-- Product Size End -->
+
+                        <!-- Quantity Start -->
+                        {% if product.status != 'None' %}
+                            <form method="post" action="{% url 'cart:add_cart' product.id %}">
+                                {% csrf_token %}
+                                <div class="quantity d-flex align-items-center mb-5">
+                                    <span class="ms-2"><strong>تعداد </strong></span>
+                                    {#                                    <div class="cart-plus-minus">#}
+                                    <div class="cart-plus-minusnew d-flex flex-row justify-content-start align-items-center ">
+                                        {#                                        <button id="plus" class="btn btn-primary rounded-0">+</button>#}
+                                        <input type="hidden" name="select" value="{{ variants.id }}">
+                                        <input id="input" class="cart-plus-minus-box text-center btn px-0 w-50"
+                                               name="quantity" value="1" min="1"
+                                               max="{{ variants.amount }}" type="text"
+                                               oninvalid="setCustomValidity('Your amount is more than {{ variants.amount }}')">
+                                        {#                                        <button id="minus" class="btn btn-primary rounded-0">-</button>#}
+
+                                        {#div class="dec qtybutton"></div>#}
+                                        {#<div class="inc qtybutton"></div>#}
+                                    </div>
+                                </div>
+                                <!-- Cart Button Start -->
+                                <div class="cart-btn action-btn mb-6">
+                                    <div class="action-cart-btn-wrapper d-flex align-items-center">
+                                        <div class="add-to_cart">
+                                            {% if variants.amount == 0 %}
+                                            <button class="btn btn-primary btn-hover-dark rounded-0" type="submit" disabled>اضافه
+                                                به سبد خرید
+                                            </button>
+                                            {% else %}
+                                            <button class="btn btn-primary btn-hover-dark rounded-0" type="submit">اضافه
+                                                به سبد خرید
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                        <div id="success">
+                                            <a class="test action btn-primary"
+                                               href="{% url 'home:favourite' product.id %}"
+                                               id="testID" title="اضافه به علاقه مندی">
+                                                {% if request.user in product.favourite.all %}
+                                                    {#                                                        like#}
+                                                    <i class="ti-heart-broken"></i>
+                                                {% else %}
+                                                    {#                                                        dislike#}
+                                                    <i class="ti-heart"></i>
+                                                {% endif %}
+                                            </a>
+                                            <a href="{% url 'home:add' product.id %}" class=" action btn-primary"
+                                               data-toggle="tooltip" data-placement="bottom" title="مقایسه"><i
+                                                    class="ti-split-v-alt"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Cart Button End -->
+                                {#                                <button type="submit">Add</button>#}
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'cart:add_cart' product.id %}">
+                                {% csrf_token %}
+                                <input type="number" readonly name="quantity" min="1" value="1"
+                                       max="{{ product.amount }}"
+                                       required
+                                       oninvalid="setCustomValidity('تعداد حداکثر نباید بیشتر از {{ variants.amount }}')">
+                                
+                                {% if variants.amount == 0 %}
+                                <button type="submit" class="btn btn-outline-warning btn-long cart" disabled>اضافه کردن به
+                                    سبد خرید
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-outline-warning btn-long cart">اضافه کردن به
+                                    سبد خرید
+                                </button>
+                                {% endif %}
+                            </form>
+
+                        {% endif %}
+
+                        <!-- Quantity End -->
+
+
+                        <!-- Social Shear Start -->
+                        <div class="social-share mb-n7 p-2">
+                            <div class="widget-social justify-content-start mb-6">
+                                <a title="Telegram" href="#/"><i class="fa fa-telegram"></i></a>
+                                <a title="Instagram" href="#/"><i class="icon-social-instagram"></i></a>
+                                <a title="Whatsapp" href="#/"><i class="fa fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                        <!-- Social Shear End -->
+
+                    </div>
+                    <!-- Product Summery End -->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Single Product Section End -->
+
+    <!-- Single Product Tab Start -->
+    <div class="section section-padding">
+        <div class="container">
+            <div class="row">
+
+                <!-- Single Product Tab Start -->
+                <div class="col-lg-12 single-product-tab">
+                    <ul class="nav nav-tabs mb-n3" id="myTab" role="tablist">
+                        <li class="nav-item mb-3">
+                            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#connect-2" role="tab"
+                               aria-selected="false">نظرات</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mb-text" id="myTabContent">
+                        <div class="tab-pane fade show active" id="connect-2" role="tabpanel"
+                             aria-labelledby="profile-tab">
+                            <!-- Start Single Content -->
+                            <div class="product_tab_content mt-8 p-3 border ">
+                                {% for com in comment %}
+                                    <!-- Start Single Review -->
+                                    <div class="single-review d-flex mb-4 overflow-hidden ">
+
+
+                                        <!-- Review Details Start -->
+                                        <div class="review_details w-100">
+                                            <div class="review_info mb-2 d-flex flex-column">
+                                                <!-- Rating Start -->
+                                                <span class="rating justify-content-end mb-1">
+                                                    <div class="comment-ratings">
+                                                        <i class="fa fa-star{% if com.rate < 1 %}-o empty {% endif %}"></i>
+                                                        <i class="fa fa-star{% if com.rate < 2 %}-o empty {% endif %}"></i>
+                                                        <i class="fa fa-star{% if com.rate < 3 %}-o empty {% endif %}"></i>
+                                                        <i class="fa fa-star{% if com.rate < 4 %}-o empty {% endif %}"></i>
+                                                        <i class="fa fa-star{% if com.rate < 5 %}-o empty {% endif %}"></i>
+                                                    </div>
+                                                </span>
+                                                <!-- Rating End -->
+
+                                                <!-- Review Title & Date Start -->
+                                                <div class="review-title-date d-flex mt-1">
+                                                    <h5 class="title">{{ com.user.username }} - </h5>
+                                                    <span> {{ com.create | naturaltime }} </span>
+                                                </div>
+                                                <!-- Review Title & Date End -->
+                                            </div>
+                                            <p class="text-break">{{ com.comment }}</p>
+                                            {% if user.is_authenticated %}
+                                                <div class="social-share mb-n7">
+                                                    <div class="widget-social justify-content-start mb-6">
+{#                                                        <a href="{% url 'home:comment_like' com.id %}"#}
+{#                                                           class="like m-2 cursor testlike">#}
+{#                                                            <i class="fa fa-thumbs-o-up action"></i>#}
+{#                                                            <span class="ms-1">{{ com.total_comment_like }}</span>#}
+{#                                                        </a>#}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Review Details End -->
+
+                                    </div>
+                                {% endfor %}
+                                <!-- End Single Review -->
+                                {% if user.is_authenticated %}
+                                    <!-- Rating Wrap Start -->
+                                    <div class="rating_wrap">
+                                        <h5 class="rating-title mb-2">اضافه کردن نظر </h5>
+                                        <h6 class="rating-sub-title mb-2">امتیاز و نظر شما</h6>
+                                    </div>
+                                    <!-- Rating Wrap End -->
+
+                                    <!-- Comments ans Replay Start -->
+                                    <div class="comments-area comments-reply-area">
+                                        <div class="row">
+                                            <div class="col-lg-12 ">
+
+                                                <!-- Comment form Start -->
+                                                <form method="post" action="{% url 'home:product_Comment' product.id %}"
+                                                      class="comment-form-area">
+                                                    {% csrf_token %}
+                                                    <div class="rating">
+                                                        <input type="radio" name="rate" value="5" id="5"><label
+                                                            for="5">&star;</label>
+                                                        <input type="radio" name="rate" value="4" id="4"><label
+                                                            for="4">&star;</label>
+                                                        <input type="radio" name="rate" value="3" id="3"><label
+                                                            for="3">&star;</label>
+                                                        <input type="radio" name="rate" value="2" id="2"><label
+                                                            for="2">&star;</label>
+                                                        <input type="radio" name="rate" value="1" id="1"><label
+                                                            for="1">&star;</label>
+                                                    </div>
+                                                    <!-- Comment Texarea Start -->
+                                                    <div class="comment-form-comment mb-3">
+                                                        <textarea class="comment-notes" name="comment" id="comment"
+                                                                  maxlength="120"
+                                                                  required
+                                                                  oninvalid="setCustomValidity('لطفا کامنت وارد نمایید')"
+                                                        ></textarea>
+                                                    </div>
+                                                    <!-- Comment Texarea End -->
+
+                                                    <!-- Comment Submit Button Start -->
+                                                    <div class="comment-form-submit">
+                                                        <button type="submit"
+                                                                class="btn btn-primary btn-hover-dark border-0">ارسال
+                                                        </button>
+                                                    </div>
+                                                    <!-- Comment Submit Button End -->
+
+                                                </form>
+                                                <!-- Comment form End -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Comments ans Replay End -->
+                                    </div>
+                                    <!-- End Single Content -->
+                                {% else %}
+                                    <div class="rating_wrap">
+                                        <h5 class="rating-sub-title mb-2 ms-2">برای ارسال نظر لطفا <a
+                                                href="{% url 'accounts:login' %}" class="link-primary">وارد </a>شوید
+                                        </h5>
+                                    </div>
+                                {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Product Tab End -->
+            </div>
+        </div>
+    </div>
+    <!-- Single Product Tab End -->
+
+    <!-- Product Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title text-center">
+                        <h2 class="title">محصولات مشابه</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col">
+
+                    <div class="product-carousel arrow-outside-container">
+                        <div class="swiper-container" dir="ltr">
+
+                            <div class="swiper-wrapper">
+                                {% for tag in similar %}
+                                    <div class="swiper-slide">
+                                        <!-- Product Start -->
+                                        <div class="product-wrapper border-start border-light">
+
+                                            <div class="product">
+                                                <!-- Thumb Start  -->
+                                                <div class="thumb">
+                                                    <a href="{% url 'home:detail' tag.id %}" class="image">
+                                                        <img class="fit-image" src="{{ tag.image.url }}" alt="Product"/>
+                                                    </a>
+                                                    <span class="badges">
+                                            <span class="sale">{{ tag.id }}</span>
+                                            </span>
+                                                    <div class="action-wrapper">
+                                                        <a href="{% url 'home:detail' tag.id %}" class="action wishlist"
+                                                           title="خرید"><i class="ti-shopping-cart"></i></a>
+                                                    </div>
+                                                </div>
+                                                <!-- Thumb End  -->
+
+                                                <!-- Content Start  -->
+                                                <div class="content">
+                                                    <h5 class="title"><a
+                                                            href="{% url 'home:detail' tag.id %}">{{ tag.name }}</a>
+                                                    </h5>
+                                                    <span class="rating">
+                                            <span class="new">برند : {{ tag.brand }}</span>
+                                            </span>
+                                                    <span class="price d-flex flex-column" dir="rtl">
+                                                        {% if tag.discount %}
+                                                            <span class="new price">{{ tag.total_price }}  تومان</span>
+                                                            <span class="old price">{{ tag.unit_price }}  تومان</span>
+                                                        {% else %}
+                                                            <span class="new price">{{ tag.unit_price }}  تومان</span>
+                                                        {% endif %}
+                                            </span>
+                                                </div>
+                                                <!-- Content End  -->
+                                            </div>
+
+                                        </div>
+                                        <!-- Product End -->
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="swiper-pagination d-block d-md-none"></div>
+                            <div class="swiper-button-prev swiper-nav-button d-none d-md-flex"><i
+                                    class="ti-angle-left"></i></div>
+                            <div class="swiper-button-next swiper-nav-button d-none d-md-flex"><i
+                                    class="ti-angle-right"></i></div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Product Section End -->
+
+
+
+
+
+    <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+     <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                               <a href="{% url 'home:blog_list' %}">آموزش</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {#    <link rel='stylesheet' href='https://sachinchoolur.github.io/lightslider/dist/css/lightslider.css'>#}
+    {#    <div class="container-fluid mt-2 mb-3">#}
+    {#        <div class="row no-gutters">#}
+    {#            <div class="col-md-5 pr-2">#}
+    {#                <div class="card">#}
+    {#                    <div class="demo">#}
+    {#                        <ul id="lightSlider">#}
+    {#                            <li data-thumb="{{ product.image.url }}">#}
+    {#                                <img src="{{ product.image.url }}"/>#}
+    {#                            </li>#}
+    {##}
+    {#                            {% for i in images %}#}
+    {#                                <li data-thumb="{{ i.image.url }}">#}
+    {#                                    <img src="{{ i.image.url }}"/>#}
+    {#                                </li>#}
+    {#                            {% endfor %}#}
+    {##}
+    {#                        </ul>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <div class="card mt-2"><h6>Reviews</h6>#}
+    {#                    <div class="d-flex flex-row">#}
+    {#                        <div class="stars">#}
+    {#                            <i class="fa fa-star"></i>#}
+    {#                        </div>#}
+    {#                        <span class="ml-1 font-weight-bold">{{ product.average }}</span></div>#}
+    {#                    <hr>#}
+    {#                    <div class="badges">#}
+    {#                        {% if user.is_authenticated %}#}
+    {#                            <form method="post" action="{% url 'home:product_Comment' product.id %}">#}
+    {#                                {% csrf_token %}#}
+    {#                                <div class="card">#}
+    {#                                <div class="row">#}
+    {#                                    <div class="col-12">#}
+    {#                                        <div class="comment-box">#}
+    {#                                            <h4>Add Comment</h4>#}
+    {#                                            <div class="rating">#}
+    {#                                                <input type="radio" name="rate" value="5" id="5"><label#}
+    {#                                                    for="5">&star;</label>#}
+    {#                                                <input type="radio" name="rate" value="4" id="4"><label#}
+    {#                                                    for="4">&star;</label>#}
+    {#                                                <input type="radio" name="rate" value="3" id="3"><label#}
+    {#                                                    for="3">&star;</label>#}
+    {#                                                <input type="radio" name="rate" value="2" id="2"><label#}
+    {#                                                    for="2">&star;</label>#}
+    {#                                                <input type="radio" name="rate" value="1" id="1"><label#}
+    {#                                                    for="1">&star;</label>#}
+    {#                                            </div>#}
+    {#                                            <div class="comment-box">#}
+    {#                                        <textarea name="comment" class="form-control" rows="4"#}
+    {#                                                  id="comment" required#}
+    {#                                                  oninvalid="setCustomValidity('لطفا کامنت وارد نمایید')"></textarea>#}
+    {#                                            </div>#}
+    {#                                            <div class="text-center">#}
+    {#                                                <button type="submit" class="btn btn-danger">Send Comment#}
+    {#                                                </button>#}
+    {#                                            </div>#}
+    {##}
+    {#                                        </div>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                                </div>#}
+    {#                            </form>#}
+    {#                        {% endif %}#}
+    {#                    </div>#}
+    {#                    <hr>#}
+    {#                    <div class="comment-section">#}
+    {#                        {% for com in comment %}#}
+    {#                            <div class="d-flex justify-content-between align-items-center">#}
+    {#                                <div class="d-flex flex-row align-items-center">#}
+    {#                                    <img src="{{ com.user.profile.profile_image.url }}"#}
+    {#                                         class="rounded-circle profile-image" style="width: 70px;">#}
+    {#                                    <div class="d-flex flex-column ml-1 comment-profile">#}
+    {#                                        <div class="comment-ratings">#}
+    {#                                            <i class="fa fa-star{% if com.rate < 1 %}-o empty {% endif %}"></i>#}
+    {#                                            <i class="fa fa-star{% if com.rate < 2 %}-o empty {% endif %}"></i>#}
+    {#                                            <i class="fa fa-star{% if com.rate < 3 %}-o empty {% endif %}"></i>#}
+    {#                                            <i class="fa fa-star{% if com.rate < 4 %}-o empty {% endif %}"></i>#}
+    {#                                            <i class="fa fa-star{% if com.rate < 5 %}-o empty {% endif %}"></i>#}
+    {#                                        </div>#}
+    {#                                        <span class="username">{{ com.user.username }}</span></div>#}
+    {#                                </div>#}
+    {#                                <div class="date"><span class="text-muted">{{ com.create }}</span></div>#}
+    {#                            </div>#}
+    {#                            <hr>#}
+    {#                            <div class="row pl-2">#}
+    {#                                <p>{{ com.comment }}</p>#}
+    {#                            </div>#}
+    {#                            <div class="row">#}
+    {#                                <div class="p-2 m-2">#}
+    {#                                    {% if user.is_authenticated %}#}
+    {#                                        <a href="{% url 'home:comment_like' com.id %}" class="like m-2 cursor">#}
+    {#                                            <i class="fa fa-thumbs-o-up">likecomment#}
+    {#                                                <span>like : </span>&nbsp &nbsp{{ com.total_comment_like }}#}
+    {#                                            </i>#}
+    {#                                        </a>#}
+    {#                                    {% endif %}#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {##}
+    {#                            <form method="post" action="{% url 'home:product_reply' product.id com.id %}">#}
+    {#                                {% csrf_token %}#}
+    {#                                <textarea name="comment" id="comment" placeholder="reply..." class="form-control"#}
+    {#                                          rows="4" required#}
+    {#                                          oninvalid="setCustomValidity('meghdar dahi konid')"></textarea>#}
+    {#                                <div class="mt-2">#}
+    {#                                    <button type="submit" class="btn btn-info">Send Reply</button>#}
+    {#                                </div>#}
+    {##}
+    {#                            </form>#}
+    {#                            {% for data in com.comment_reply.all %}#}
+    {#                                <p class="send mt-3 mb-3">Reply COmment : {{ data.comment }}</p>#}
+    {#                            {% endfor %}#}
+    {#                            <hr>#}
+    {#                        {% endfor %}#}
+    {##}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            <div class="col-md-7">#}
+    {#                <div class="card">#}
+    {##}
+    {#                    <div class="about">#}
+    {#                        <span class="font-weight-bold">{{ product.name }} </span>#}
+    {#                        {% if product.status == 'Both' %}#}
+    {#                            <form action="" method="post">#}
+    {#                                {% csrf_token %}#}
+    {##}
+    {#                                {% for data in size %}#}
+    {#                                    <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}#}
+    {#                                           checked{% endif %} name="select" onchange="this.form.submit();">#}
+    {#                                    <a href="" style="text-decoration: none">{{ data.size_variant }}</a>#}
+    {#                                {% endfor %}#}
+    {#                            </form>#}
+    {#                            <br>#}
+    {#                            <form action="" method="post">#}
+    {#                                {% csrf_token %}#}
+    {#                                {% for data in colors %}#}
+    {#                                    <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}#}
+    {#                                           checked{% endif %} name="select" onchange="this.form.submit();">#}
+    {#                                    <a href="" style="text-decoration: none">{{ data.color_variant }}</a>#}
+    {#                                {% endfor %}#}
+    {#                            </form>#}
+    {#                            <br>#}
+    {##}
+    {##}
+    {##}
+    {##}
+    {#                        {% elif product.status == 'Size' %}#}
+    {#                            <form method="post">#}
+    {#                                {% csrf_token %}#}
+    {#                                {% for data in variant %}#}
+    {#                                    <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}#}
+    {#                                           checked{% endif %}#}
+    {#                                           name="select" onchange="this.form.submit();">#}
+    {#                                    <a href="" style="text-decoration: none">{{ data.size_variant }}</a>#}
+    {#                                {% endfor %}#}
+    {#                            </form><br>#}
+    {#                        {% elif product.status == 'Color' %}#}
+    {#                            <form method="post">#}
+    {#                                {% csrf_token %}#}
+    {#                                {% for data in variant %}#}
+    {#                                    <input type="radio" value="{{ data.id }}" {% if variants.id == data.id %}#}
+    {#                                           checked{% endif %}#}
+    {#                                           name="select" onchange="this.form.submit()">#}
+    {#                                    <a href="" style="text-decoration: none">{{ data.color_variant }}</a>#}
+    {#                                {% endfor %}#}
+    {#                            </form>#}
+    {#                        {% endif %}#}
+    {#                        <h4 class="font-weight-bold"> {{ variants.total_price }}</h4>#}
+    {#                        <div>#}
+    {#                            <a href="{% url 'home:add' product.id %}">add compare</a><br><br>#}
+    {#                            <a href="{% url 'home:remove' product.id %}">remove compare</a><br><br>#}
+    {#                        </div>#}
+    {#                        <div id="success">#}
+    {##}
+    {#                            <button>#}
+    {#                                <a class="test" href="{% url 'home:favourite' product.id %}" id="testID">#}
+    {#                                    {% if request.user in product.favourite.all %}#}
+    {#                                        like#}
+    {#                                    {% else %}#}
+    {#                                        dislike#}
+    {#                                    {% endif %}#}
+    {#                                </a>#}
+    {#                            </button>#}
+    {##}
+    {#                        </div>#}
+    {#                        <div>#}
+    {#                            <h2 id="fail"></h2>#}
+    {#                        </div>#}
+    {##}
+    {#                        <div class="cart">#}
+    {#                            {% if product.status != 'None' %}#}
+    {#                                <form method="post" action="{% url 'cart:add_cart' product.id %}">#}
+    {#                                    {% csrf_token %}#}
+    {#                                    <input type="hidden" name="select" value="{{ variants.id }}">#}
+    {#                                    <input type="number" name="quantity" min="1" value="1" max="{{ variants.amount }}"#}
+    {#                                           required>#}
+    {#                                    <button type="submit">Add</button>#}
+    {##}
+    {##}
+    {#                                </form>#}
+    {#                                <form method="post" action="{% url 'cart:add' %}">#}
+    {#                                    {% csrf_token %}#}
+    {#                                    <input type="hidden" name="test" value="{{ variants.id }}">#}
+    {#                                    <input type="number" name="quantity" value="1">#}
+    {#                                    <button type="submit">Add</button>#}
+    {#                                </form>#}
+    {#                            {% else %}#}
+    {#                                <form method="post" action="{% url 'cart:add_cart' product.id %}">#}
+    {#                                    {% csrf_token %}#}
+    {#                                    <input type="number" name="quantity" min="1" value="1" max="{{ product.amount }}"#}
+    {#                                           required#}
+    {#                                           oninvalid="setCustomValidity('تعداد حداکثر نباید بیشتر از {{ product.amount }}')">#}
+    {#                                    <button type="submit" class="btn btn-outline-warning btn-long cart">اضافه کردن به#}
+    {#                                        سبد خرید#}
+    {#                                    </button>#}
+    {#                                    <button class="btn btn-light wishlist"><i class="fa fa-heart"></i></button>#}
+    {#                                </form>#}
+    {##}
+    {#                            {% endif %}#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#                <hr>#}
+    {#                <div class="buttons">#}
+    {#                    <button class="btn btn-outline-warning btn-long cart">Add to Cart</button>#}
+    {#                    <button class="btn btn-warning btn-long buy">Buy it Now</button>#}
+    {#                    <button class="btn btn-light wishlist"><i class="fa fa-heart"></i></button>#}
+    {#                </div>#}
+
+    {#                <div class="card mt-2"><span>Similar items:</span>#}
+    {#                    <div class="similar-products mt-2 d-flex flex-row">#}
+    {#                        {% for tag in similar %}#}
+    {#                            <div class="card border p-1 text-center" style="width: 9rem;margin-right: 3px;">#}
+    {#                                <a href="{% url 'home:detail' tag.id %}">#}
+    {#                                    <img#}
+    {#                                            src="{{ tag.image.url }}" class="card-img-top" alt="..."#}
+    {#                                            style="width: 110px;height: 110px;">#}
+    {#                                </a>#}
+    {##}
+    {#                                <div class="card-body"><h6 class="card-title">{{ tag.total_price }}</h6></div>#}
+    {#                            </div>#}
+    {#                        {% endfor %}#}
+    {#                    </div>#}
+    {#                </div>#}
+
+    {#                <div class="card mt-2"><span>Chart:</span>#}
+    {#                    <div class="similar-products mt-2 d-flex flex-row">#}
+    {#                        <div class="row">#}
+    {#                            <canvas id="myChart" width="600" height="300"></canvas>#}
+    {#                        </div>#}
+    {#                        {% block script %}#}
+    {#                            {% if product.status != 'None' %}#}
+    {#                                <script>#}
+    {#                                    const ctx = document.getElementById('myChart').getContext('2d');#}
+    {#                                    const myChart = new Chart(ctx, {#}
+    {#                                        type: 'bar',#}
+    {#                                        data: {#}
+    {#                                            labels: [{%  for c in change %}{% if variants.id == c.variant_id %} '{{ i.update }}' {% endif %}, {% endfor %}],#}
+    {#                                            datasets: [{#}
+    {#                                                label: '# of Votes',#}
+    {#                                                data: [{%  for c in change %}{% if variants.id == c.variant_id %} {{ i.unit_price }} {% endif %}, {% endfor %}],#}
+    {#                                                backgroundColor: [#}
+    {#                                                    {% for i in change %} '{{ i.color }}' ,{% endfor %}#}
+    {#                                                ],#}
+    {#                                                borderColor: [#}
+    {#                                                    'rgba(255, 99, 132, 1)',#}
+    {#                                                    'rgba(54, 162, 235, 1)',#}
+    {#                                                    'rgba(255, 206, 86, 1)',#}
+    {#                                                    'rgba(75, 192, 192, 1)',#}
+    {#                                                    'rgba(153, 102, 255, 1)',#}
+    {#                                                    'rgba(255, 159, 64, 1)'#}
+    {#                                                ],#}
+    {#                                                borderWidth: 1#}
+    {#                                            }]#}
+    {#                                        },#}
+    {#                                        options: {#}
+    {#                                            scales: {#}
+    {#                                                y: {#}
+    {#                                                    beginAtZero: true#}
+    {#                                                }#}
+    {#                                            }#}
+    {#                                        }#}
+    {#                                    });#}
+    {#                                </script>#}
+    {#                            {% else %}#}
+    {#                                <script>#}
+    {#                                    const ctx = document.getElementById('myChart').getContext('2d');#}
+    {#                                    const myChart = new Chart(ctx, {#}
+    {#                                        type: 'pie',#}
+    {#                                        data: {#}
+    {#                                            labels: [#}
+    {#                                                {%  for i in update %} '{{ i.update|jformat:"%A %d %B %Y" }}',{% endfor %}],#}
+    {#                                            datasets: [{#}
+    {#                                                label: '# of Votes',#}
+    {#                                                data: [{% for i in update %} {{ i.unit_price }} ,{% endfor %}],#}
+    {#                                                backgroundColor: [#}
+    {#                                                    'rgba(255, 99, 132, 0.8)',#}
+    {#                                                    'rgba(54, 162, 235, 0.8)',#}
+    {#                                                    'rgba(255, 206, 86, 0.8)',#}
+    {#                                                    'rgba(75, 192, 192, 0.8)',#}
+    {#                                                    'rgba(153, 102, 255, 0.8)',#}
+    {#                                                    'rgba(255, 159, 64, 0.8)'#}
+    {#                                                ],#}
+    {#                                                borderColor: [#}
+    {#                                                    'rgba(255, 99, 132, 1)',#}
+    {#                                                    'rgba(54, 162, 235, 1)',#}
+    {#                                                    'rgba(255, 206, 86, 1)',#}
+    {#                                                    'rgba(75, 192, 192, 1)',#}
+    {#                                                    'rgba(153, 102, 255, 1)',#}
+    {#                                                    'rgba(255, 159, 64, 1)'#}
+    {#                                                ],#}
+    {#                                                borderWidth: 1#}
+    {#                                            }]#}
+    {#                                        },#}
+    {#                                        options: {#}
+    {#                                            scales: {#}
+    {#                                                y: {#}
+    {#                                                    beginAtZero: true#}
+    {#                                                }#}
+    {#                                            }#}
+    {#                                        }#}
+    {#                                    });#}
+    {#                                </script>#}
+    {#                            {% endif %}#}
+    {#                        {% endblock %}#}
+    {##}
+    {#                    </div>#}
+    {#                </div>#}
+    </div>
+    </div>
+    </div>
+    </div>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+    <script src='https://sachinchoolur.github.io/lightslider/dist/js/lightslider.js'></script>
+    <script> $('#lightSlider').lightSlider({gallery: true, item: 1, loop: true, slideMargin: 0, thumbItem: 9});
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+    {#    <script>#}
+    {#        let plus = document.getElementById('plus')#}
+    {#        let input = document.getElementById('input')#}
+    {#        let max_input = $(input).attr('max')#}
+    {#        let minus = document.getElementById('minus')#}
+    {#        let inputValue = input.value;#}
+    {##}
+    {#        plus.addEventListener('click', function (event) {#}
+    {#            if (inputValue < max_input) {#}
+    {#                event.preventDefault()#}
+    {#                inputValue++;#}
+    {#                input.value = inputValue#}
+    {#            } else {#}
+    {#                event.preventDefault()#}
+    {#            }#}
+    {#        });#}
+    {##}
+    {#        minus.addEventListener('click', function (event) {#}
+    {#            if (inputValue > 1) {#}
+    {#                event.preventDefault()#}
+    {#                inputValue--;#}
+    {#                input.value = inputValue#}
+    {#            } else {#}
+    {#                event.preventDefault()#}
+    {#            }#}
+    {#        });#}
+    {#    </script>#}
+
+
+
+
+
+
+
+{#    <script src="{% static 'assets/js/home/details.js' %}"></script>#}
+    <script>
+        $(document).on('click', '.test', function (event) {
+            event.preventDefault();
+            const post_id = $(this).attr('id')
+            const like_text = $(`.test`).html()
+            const trim = $.trim(like_text)
+            console.log(trim)
+            $.ajax({
+                url: $(this).attr('href'),
+                type: 'GET',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    {#alert('ok');#}
+                    {#$('#success').html(response['success'])#}
+                    if (trim === '<i class="ti-heart"></i>') {
+                        $(`.test`).html('<i class="ti-heart-broken"></i>')
+                    } else {
+                        $(`.test`).html('<i class="ti-heart"></i>')
+                    }
+                },
+                error: function (error) {
+                    $('#fail').html(error)
+                },
+
+            });
+
+        });
+
+        $(document).on('click', '.testlike', function (event) {
+            event.preventDefault();
+            const post_id = $(this).attr('id')
+            const like_text = $(`.testlike`).html()
+            const trim = $.trim(like_text)
+            console.log(trim)
+            $.ajax({
+                url: $(this).attr('href'),
+                type: 'GET',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    if (trim === '<i class="fa fa-thumbs-o-up action"></i>') {
+                        $(`.testlike`).html('<i class="fa fa-thumbs-o-down action"></i>')
+                    } else {
+                        $(`.testlike`).html('<i class="fa fa-thumbs-o-up action"></i>')
+                    }
+                },
+                error: function (error) {
+                    $('#fail').html(error)
+                },
+
+            });
+
+        });
+    </script>
+
+
+    <script> //nice number
+    (function ($) {
+        $.fn.niceNumber = function (options) {
+            var defaults = {
+                autoSize: true,
+                autoSizeBuffer: 1,
+                buttonDecrement: '-',
+                buttonIncrement: '+',
+                buttonPosition: 'around',
+
+                /**
+                 callbackFunction
+                 @param {$input} currentInput - the input running the callback
+                 @param {number} amount - the amount after increase/decrease
+                 @param {object} settings - the passed niceNumber settings
+                 **/
+                onDecrement: false,
+                onIncrement: false,
+            };
+            var settings = $.extend(defaults, options);
+
+            return this.each(function () {
+                var currentInput = this,
+                    $currentInput = $(currentInput),
+                    maxValue = $currentInput.attr('max'),
+                    minValue = $currentInput.attr('min'),
+                    attrMax = null,
+                    attrMin = null;
+
+                // Skip already initialized input
+                if ($currentInput.attr('data-nice-number-initialized')) return;
+
+                // Handle max and min values
+                if (
+                    maxValue !== undefined &&
+                    maxValue !== false
+                ) {
+                    attrMax = parseFloat(maxValue);
+                }
+
+                if (
+                    minValue !== undefined &&
+                    minValue !== false
+                ) {
+                    attrMin = parseFloat(minValue);
+                }
+
+                // Fix issue with initial value being < min
+                if (attrMin && !currentInput.value) {
+                    $currentInput.val(attrMin);
+                }
+
+                // Generate container
+                var $inputContainer = $('<div/>', {
+                    class: 'nice-number',
+                }).insertAfter(currentInput);
+
+                // Generate interval (object so it is passed by reference)
+                var interval = {};
+
+                // Generate buttons
+                var $minusButton = $('<button/>')
+                    .attr('type', 'button')
+                    .html(settings.buttonDecrement)
+                    .on('mousedown mouseup mouseleave', function (event) {
+                        changeInterval(event.type, interval, function () {
+                            var currentValue = parseFloat($currentInput.val() || 0);
+                            if (
+                                attrMin == null ||
+                                attrMin < currentValue
+                            ) {
+                                var newValue = currentValue - 1;
+                                $currentInput.val(newValue);
+                                if (settings.onDecrement) {
+                                    settings.onDecrement(
+                                        $currentInput,
+                                        newValue,
+                                        settings
+                                    );
+                                }
+                            }
+                        });
+
+                        // Trigger the input event here to avoid event spam
+                        if (event.type == 'mouseup' || event.type == 'mouseleave') {
+                            $currentInput.trigger('input');
+                        }
+                    });
+
+                var $plusButton = $('<button/>')
+                    .attr('type', 'button')
+                    .html(settings.buttonIncrement)
+                    .on('mousedown mouseup mouseleave', function (event) {
+                        changeInterval(event.type, interval, function () {
+                            var currentValue = parseFloat($currentInput.val() || 0);
+                            if (
+                                attrMax == null ||
+                                attrMax > currentValue
+                            ) {
+                                var newValue = currentValue + 1;
+                                $currentInput.val(newValue);
+                                if (settings.onIncrement) {
+                                    settings.onIncrement(
+                                        $currentInput,
+                                        newValue,
+                                        settings
+                                    );
+                                }
+                            }
+                        });
+
+                        // Trigger the input event here to avoid event spam
+                        if (event.type == 'mouseup' || event.type == 'mouseleave') {
+                            $currentInput.trigger('input');
+                        }
+                    });
+
+                // Remember that we have initialized this input
+                $currentInput.attr('data-nice-number-initialized', true);
+
+                // Append elements
+                switch (settings.buttonPosition) {
+                    case 'left':
+                        $minusButton.appendTo($inputContainer);
+                        $plusButton.appendTo($inputContainer);
+                        $currentInput.appendTo($inputContainer);
+                        break;
+                    case 'right':
+                        $currentInput.appendTo($inputContainer);
+                        $minusButton.appendTo($inputContainer);
+                        $plusButton.appendTo($inputContainer);
+                        break;
+                    case 'around':
+                    default:
+                        $plusButton.appendTo($inputContainer);
+                        $currentInput.appendTo($inputContainer);
+                        $minusButton.appendTo($inputContainer);
+
+                        break;
+                }
+
+                // Nicely size input
+                if (settings.autoSize) {
+                    $currentInput.width(
+                        $currentInput.val().length + settings.autoSizeBuffer + 'ch'
+                    );
+                    $currentInput.on('keyup input', function () {
+                        $currentInput.animate(
+                            {
+                                width:
+                                    $currentInput.val().length +
+                                    settings.autoSizeBuffer +
+                                    'ch'
+                            },
+                            200
+                        );
+                    });
+                }
+            });
+        };
+
+        function changeInterval(eventType, interval, callback) {
+            if (eventType == 'mousedown') {
+                interval.timeout = setTimeout(function () {
+                    interval.actualInterval = setInterval(function () {
+                        callback();
+                    }, 100);
+                }, 200);
+                callback();
+            } else {
+                if (interval.timeout) {
+                    clearTimeout(interval.timeout);
+                }
+                if (interval.actualInterval) {
+                    clearInterval(interval.actualInterval);
+                }
+            }
+        }
+    })(jQuery);
+    </script>
+
+    <script>
+        $('#input').niceNumber({
+            autoSize: false,
+
+        });
+
+    </script>
+    <script>
+        let prices = document.querySelectorAll(".price");
+        prices.forEach((price) => {
+            price.innerHTML = price.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        });
+</script>
+
+{% endblock %}
+

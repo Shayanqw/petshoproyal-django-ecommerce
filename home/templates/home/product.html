@@ -1,0 +1,534 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load home_test %}
+{% load humanize %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'home/css/product.css' %}">
+{% endblock %}
+{% load thumbnail %}
+{% block title %}
+    فروشگاه
+{% endblock %}
+{% block body %}
+
+    <!-- Shop Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-12">
+
+                    <!--shop toolbar start-->
+                    <div class="shop_toolbar_wrapper flex-column flex-md-row p-2 mb-8 border-1 border-primary border">
+
+                        <!-- Shop Top Bar Left start -->
+                        <div class="shop-top-bar-left d-flex justify-content-around">
+                            <div class="shop-top-show me-2 fw-bolder">
+                                <span>نمایش 1-12</span>
+                            </div>
+                            <div class="shop_toolbar_btn">
+                                <button data-role="grid_3" type="button" class="active btn-grid-3" title="Grid"><i
+                                        class="ti-layout-grid4-alt"></i></button>
+                                <!--<button data-role="grid_list" type="button" class="btn-list" title="List"><i-->
+                                <!--        class="ti-align-justify"></i></button>-->
+                            </div>
+                        </div>
+                        <!-- Shop Top Bar Left end -->
+
+                        <!-- Shopt Top Bar Right Start -->
+                        <div class="shop-top-bar-right d-flex justify-content-around">
+                            <h4 class="title ms-2 fw-bolder">فیلتر بر اساس : </h4>
+                                <form action="" method="get">
+                                    {% csrf_token %}
+                                    <div class="d-flex flex-lg-row flex-column">
+                                        <div>
+                                            <input type="submit" name="price" value="گران ترین" class="btn p-2 btn-hover-primary btn-outline-light  border-primary">
+                                            <input type="submit" name="price" value="ارزانترین" class="btn p-2 btn-hover-primary btn-outline-light  border-primary">
+                                            <input type="submit" name="create" value="جدیدترین" class="btn p-2 btn-hover-primary btn-outline-light  border-primary">
+                                            <input type="submit" name="discount" value="پر تخفیف ترین" class="btn p-2 btn-hover-primary btn-outline-light  border-primary">
+                                            <input type="submit" name="sell" value="پر فروش ترین" class="btn p-2 btn-hover-primary btn-outline-light  border-primary">
+{#                                            <input type="submit" name="favourite" value="محبوب ترین" class="btn px-0 py-2 btn-hover-primary btn-outline-light">#}
+                                        </div>
+                                    </div>
+                                </form>
+
+                        </div>
+                        <!-- Shopt Top Bar Right End -->
+
+                    </div>
+                    <!--shop toolbar end-->
+
+                    <!-- Shop Wrapper Start -->
+                    <div class="row shop_wrapper grid-view">
+                        {% for product in products %}
+                            <!-- Single Product Start -->
+                            <div class="col-lg-4 col-md-4 col-sm-6 product border border-1 border-primary">
+                                <div class="product-inner py-2">
+                                    <div class="thumb">
+                                        {% if product.amount == 0 %}
+                                        <a href="#" disabled="disabled" class="image">
+                                            <img class="fit-image" src="{{ product.image.url }}"
+                                                 alt="{{ product.name }}"/>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'home:detail' product.id %}" class="image">
+                                            <img class="fit-image" src="{{ product.image.url }}"
+                                                 alt="{{ product.name }}"/>
+                                        </a>
+                                        {% endif %}
+                                        
+                                        <span class="badges">
+{#                                                         <span class="sale">{{ product.discount }}%</span>#}
+                                    </span>
+                                        <div class=" action-wrapper">
+                                            {% if product.amount == 0 %}
+                                            <a href="#" disabled="disabled"
+                                                   class="action wishlist p-1" title="انقضاء">
+                                                    <span class="p-1 text-center">انقضاء : {{ product.expire|date:"Y-m-d" }}</span>
+                                            </a>
+                                            {% else %}
+                                            <a href="{% url 'home:detail' product.id %}"
+                                                   class="action wishlist p-1" title="انقضاء">
+                                                    <span class="p-1 text-center">انقضاء : {{ product.expire|date:"Y-m-d" }}</span>
+                                            </a>
+                                            {% endif %}
+                                            
+                                        </div>
+                                        <!--<div class="cart-btn action-btn">-->
+                                        <!--    <div class="action-cart-btn-wrapper d-flex justify-content-center ">-->
+                                        <!--        <a href="{% url 'home:detail' product.id %}"-->
+                                        <!--           title="خرید" class="action p-2 border border-primary border-1 d-flex justify-content-center align-items-center fw-bolder"><i class="ti-shopping-cart"></i></a>-->
+                                        <!--    </div>-->
+                                        <!--</div>-->
+                                    </div>
+                                    <div class="content">
+                                        <h5 class="title py-2">
+                                            {% if product.amount == 0 %}
+                                            <a
+                                                href="#" disabled="disabled">{{ product.name }}</a>
+                                            {% else %}
+                                            <a
+                                                href="{% url 'home:detail' product.id %}">{{ product.name }}</a>
+                                            {% endif %}
+                                            
+                                        </h5>
+                                        <span class="price d-flex flex-column">
+                                        {% if product.discount %}
+                                            <span class="new price">{{ product.total_price }}  تومان</span>
+                                            <span class="old price">{{ product.unit_price }}  تومان</span>
+                                        {% else %}
+                                            <span class="new price">{{ product.unit_price }}  تومان</span>
+                                        {% endif %}
+                                    </span>
+                                        <p class="border-bottom border-1 border-primary py-2">{{ product.information }}</p>
+                                        <!-- Cart Button Start -->
+                                        <div class="add-to_cart py-1 mt-1">
+                                            {% if product.amount == 0 %}
+                                            <a href="#" disabled="disabled"
+                                                   class="btn btn-danger btn-hover-dark rounded-0">
+                                                    ناموجود
+                                                </a>
+                                            {% else %}
+                                            <a href="{% url 'home:detail' product.id %}"
+                                                   class="btn btn-primary btn-hover-dark rounded-0">
+                                                    خرید
+                                                </a>
+                                            {% endif %}
+                                                
+                                        </div>
+                                        <!--<div class="cart-btn action-btn">-->
+                                        <!--    <div class="action-cart-btn-wrapper d-flex">-->
+                                        <!--        <a href="{% url 'home:detail' product.id %}"-->
+                                        <!--           title="مشاهده محصول" class="action"><i class="ti-shopping-cart"></i></a>-->
+                                        <!--    </div>-->
+                                        <!--</div>-->
+                                        <!-- Cart Button End -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Single Product End -->
+                        {% endfor %}
+
+                    </div>
+                    <!-- Shop Wrapper End -->
+
+                    <!--shop toolbar start-->
+                    <div class="shop_toolbar_wrapper justify-content-center mt-10">
+
+                        <!-- Shopt Top Bar Right Start -->
+                        <div class="shop-top-bar-right">
+                            <nav>
+                                <ul class="pagination">
+                                    {% if products.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="{% filter_url products.previous_page_number 'page' request.GET.urlencode %}"><span
+                                                    aria-hidden="true">&laquo;</span></a>
+                                        </li>
+
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="{% filter_url products.previous_page_number 'page' request.GET.urlencode %}">{{ products.previous_page_number }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="page-item {% if page_num == page_num %} active {% endif %}">
+                                        <a class="page-link"
+                                           href="{% filter_url products.number 'page' request.GET.urlencode %}">{{ products.number }}</a>
+                                    </li>
+
+                                    {% if products.has_next %}
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="{% filter_url products.next_page_number 'page' request.GET.urlencode %}">{{ products.next_page_number }}</a>
+                                        </li>
+
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="{% filter_url products.next_page_number 'page' request.GET.urlencode %}"><span
+                                                aria-hidden="true">&raquo;</span></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- Shop Top Bar Right End -->
+
+                    </div>
+                    <!--shop toolbar end-->
+
+                </div>
+                <div class="col-lg-3 col-12">
+                    <!-- Sidebar Widget Start -->
+                    <aside class="sidebar_widget mt-10 mt-lg-0">
+                        <div class="widget_inner">
+                            <div class="widget-list mb-10">
+                                <h3 class="widget-title mb-6">جستجو</h3>
+                                <form action="{% url 'home:product_search' %}" method="post">
+                                    <div class="search-box border-1 border-primary border">
+                                        {% csrf_token %}
+                                        <input type="text" name="search" maxlength="30" required="" class="form-control"
+                                               id="id_search" placeholder="جستجو">
+                                        <button class="search-icon" type="submit">
+                                            <i class="icon-magnifier"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="widget-list mb-10">
+                                <h3 class="widget-title mb-6"><a href="#">دسته بندی ها</a></h3>
+                                <div class="sidebar-body">
+                                    {% for data in category %}
+                                        <ul class="sidebar-list">
+                                            <li><a href="{{ data.get_absolute_url }}" class="fw-bolder mx-2 my-2 border-primary border-bottom border-3 d-inline-block">
+                                                {{ data.name }}
+                                            </a>
+                                                <ul class="sidebar-list show list-unstyled pl-3 ">
+                                                    {% for info in data.sub.all %}
+                                                        <li><a class="text-decoration-none fw-bolder mx-4 my-1"
+                                                               href="{{ info.get_absolute_url }}">{{ info.name }}</a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
+                                </div>
+{#                                <h3 class="widget-title mt-3 mb-1"><a href="#">برند ها </a></h3>#}
+{#                                <div>#}
+{#                                    <form>#}
+{#                                        {{ filter.form.brand }}#}
+{#                                        <button type="submit">fil</button>#}
+{#                                    </form>#}
+{#                                </div>#}
+                            </div>
+                        </div>
+                    </aside>
+                    <!-- Sidebar Widget End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Shop Section End -->
+
+
+
+
+
+
+
+
+
+
+
+
+ <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+     <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="{% url 'home:blog_list' %}">آموزش</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {#    <div class="container-fluid">#}
+    {#        <div class="row">#}
+    {#            <div class="col-3 mt-4">#}
+    {#                <form action="" method="get">#}
+    {#                    <div class="multi-range" data-lbound="{{ min_price }}" data-ubound="{{ max_price }}">#}
+    {#                        <hr>#}
+    {#                        <input type="range" name="price_1" min="{{ min_price }}" max="{{ max_price }}" step="50000"#}
+    {#                               value="{{ min_price }}"#}
+    {#                               oninput="this.parentNode.dataset.lbound=this.value;">#}
+    {##}
+    {#                        <input type="range" name="price_2" min="{{ min_price }}" max="{{ max_price }}" step="50000"#}
+    {#                               value="{{ max_price }}"#}
+    {#                               oninput="this.parentNode.dataset.lbound=this.value;">#}
+    {#                    </div>#}
+    {#                    <label for="">Brand :#}
+    {#                        {{ filter.form.brand }}#}
+    {#                    </label><br>#}
+    {#                    <label for="">color :#}
+    {#                        {{ filter.form.color }}#}
+    {#                    </label><br>#}
+    {#                    <label for="">Size :#}
+    {#                        {{ filter.form.size }}#}
+    {#                    </label><br>#}
+    {#                    <div style="display: none">#}
+    {#                        {{ filter.form.price }}#}
+    {#                        {{ filter.form.favourite }}#}
+    {#                        {{ filter.form.discount }}#}
+    {#                        {{ filter.form.sell }}#}
+    {#                        {{ filter.form.create }}#}
+    {#                        {% if 'search' in request.GET %}#}
+    {#                            {{ s_form }}#}
+    {#                        {% endif %}#}
+    {##}
+    {#                    </div>#}
+    {#                    <button type="submit" class="btn btn-danger">Filter</button>#}
+    {#                </form>#}
+    {#            </div>#}
+    {#            <div class="col-9">#}
+    {#                <div class="row">#}
+    {#                    <form action="" method="get">#}
+    {#                        <input type="submit" name="price" value="گران ترین">#}
+    {#                        <input type="submit" name="price" value="ارزانترین">#}
+    {#                        <input type="submit" name="create" value="جدیدترین">#}
+    {#                        <input type="submit" name="discount" value="پر تخفیف ترین">#}
+    {#                        <input type="submit" name="sell" value="پر فروش ترین">#}
+    {#                        <input type="submit" name="favourite" value="محبوب ترین">#}
+    {#                        <div style="display: none">#}
+    {#                            {{ filter.form.size }}#}
+    {#                            {{ filter.form.brand }}#}
+    {#                            {{ filter.form.color }}#}
+    {#                            {{ filter.form.price_1 }}#}
+    {#                            {{ filter.form.price_2 }}#}
+    {#                            {% if 'search' in request.GET %}#}
+    {#                                {{ s_form }}#}
+    {#                            {% endif %}#}
+    {#                        </div>#}
+    {#                    </form>#}
+    {#                    <br>#}
+    {#                </div>#}
+    {#                <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet"#}
+    {#                      id="bootstrap-css">#}
+    {#                <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>#}
+    {#                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
+    {#                <!------ Include the above in your HEAD tag ---------->#}
+    {##}
+    {#                <link rel="stylesheet"#}
+    {#                      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>#}
+    {##}
+    {#                <div class="container">#}
+    {#                    <h3 class="h3">shopping Demo-1 </h3>#}
+    {#                    <div class="row">#}
+    {#                        {% for product in products %}#}
+    {#                            <div class="col-md-3 col-sm-6 mt-2">#}
+    {#                                <div class="product-grid">#}
+    {#                                    <div class="product-image">#}
+    {#                                        <a href="#">#}
+    {#                                            <img class="pic-1"#}
+    {#                                                 src="{{ product.image.url }}" style="width: 250px;height: 300px"#}
+    {#                                                 alt="">#}
+    {##}
+    {#                                        </a>#}
+    {#                                        <ul class="social">#}
+    {#                                            <li><a href="" data-tip="Quick View"><i class="fa fa-search"></i></a></li>#}
+    {#                                            <li><a href="" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a>#}
+    {#                                            </li>#}
+    {#                                            <li><a href="" data-tip="Add to Cart"><i#}
+    {#                                                    class="fa fa-shopping-cart"></i></a>#}
+    {#                                            </li>#}
+    {#                                        </ul>#}
+    {#                                     <span class="product-new-label">Sale</span>#}
+    {#                                        {% if product.discount %}#}
+    {#                                            <span class="product-discount-label">{{ product.discount }}</span>#}
+    {#                                        {% endif %}#}
+    {#                                    </div>#}
+    {#                                    <ul class="rating">#}
+    {#                                        <li class="fa fa-star"></li>#}
+    {#                                        <li class="fa fa-star"></li>#}
+    {#                                        <li class="fa fa-star"></li>#}
+    {#                                        <li class="fa fa-star"></li>#}
+    {#                                        <li class="fa fa-star disable"></li>#}
+    {#                                    </ul>#}
+    {#                                    <br>#}
+    {#                                    <div class="product-content">#}
+    {#                                        <h3 class="title"><a#}
+    {#                                                href="{% url 'home:detail' product.id %}">{{ product.name }}</a></h3>#}
+    {#                                        <div class="price">{{ product.unit_price|intcomma }}#}
+    {#                                            <span>{{ product.total_price }}</span>#}
+    {#                                        </div>#}
+    {# <a class="add-to-cart" href="{% url 'cart:add_cart' product.id %}">+ Add To Cart</a>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {#                        {% endfor %}#}
+    {#                    </div>#}
+    {#                </div>#}
+    {##}
+    {#            </div>#}
+    {#        </div>#}
+    {#        <nav aria-label="Page navigation example">#}
+    {#            <ul class="pagination">#}
+    {#                {% if products.has_previous %}#}
+    {#                    <li class="page-item">#}
+    {#                        <a class="page-link"#}
+    {#                           href="{% filter_url products.previous_page_number 'page' request.GET.urlencode %}">Previous</a>#}
+    {#                    </li>#}
+    {##}
+    {#                    <li class="page-item"><a class="page-link"#}
+    {#                                             href="{% filter_url products.previous_page_number 'page' request.GET.urlencode %}">{{ products.previous_page_number }}</a>#}
+    {#                    </li>#}
+    {#                {% endif %}#}
+    {##}
+    {#                <li class="page-item {% if page_num == page_num %} active {% endif %}">#}
+    {#                    <a class="page-link" href="{% filter_url products.number 'page' request.GET.urlencode %}"#}
+    {#                       style="background-color: red">{{ products.number }}</a>#}
+    {#                </li>#}
+    {##}
+    {#                {% if products.has_next %}#}
+    {#                    <li class="page-item"><a class="page-link"#}
+    {#                                             href="{% filter_url products.next_page_number 'page' request.GET.urlencode %}">{{ products.next_page_number }}</a>#}
+    {#                    </li>#}
+    {##}
+    {#                    <li class="page-item"><a class="page-link"#}
+    {#                                             href="{% filter_url products.next_page_number 'page' request.GET.urlencode %}">Next</a>#}
+    {#                    </li>#}
+    {#                {% endif %}#}
+    {##}
+    {#            </ul>#}
+    {#        </nav>#}
+    {#    </div>#}
+
+
+<script>
+    let prices = document.querySelectorAll(".price");
+    prices.forEach((price) => {
+        price.innerHTML = price.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
+</script>
+{% endblock %}

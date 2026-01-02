@@ -1,0 +1,452 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/dashbord.css' %}">
+{% endblock %}
+{% block title %}{{ profile.user.username }}{% endblock %}
+{% block body %}
+
+    <!-- My Account Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <!-- My Account Page Start -->
+                    <div class="myaccount-page-wrapper">
+                        <div class="row">
+
+                            <!-- My Account Tab Menu Start -->
+                            <div class="col-lg-3 col-md-4">
+                                <div class="myaccount-tab-menu nav" role="tablist">
+                                    <a href="#dashboad" class="active" data-bs-toggle="tab"><i
+                                            class="fa fa-dashboard"></i>
+                                        پنل کاربری</a>
+                                    <a href="#orders" data-bs-toggle="tab"><i class="fa fa-cart-arrow-down"></i> تاریخچه</a>
+                                    <a href="#download" data-bs-toggle="tab"><i class="fa fa-heart"></i>
+                                        علاقه مندی ها</a>
+                                    <a href="#address-edit" data-bs-toggle="tab"><i class="fa fa-user"></i>
+                                        اطلاعات حساب</a>
+                                    <!--<a href="{% url 'accounts:change' %}" ><i class="fa fa-key"></i>-->
+                                    <!--    تغییر کلمه عبور</a>-->
+                                    <a href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out"></i> خروج</a>
+                                </div>
+                            </div>
+                            <!-- My Account Tab Menu End -->
+
+                            <!-- My Account Tab Content Start -->
+                            <div class="col-lg-9 col-md-8">
+                                <div class="tab-content" id="myaccountContent">
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3 class="title">پنل کاربری</h3>
+                                            <div class="welcome">
+                                                <p>سلام, <strong>{{ profile.user.first_name }}</strong></p>
+                                            </div>
+                                            <p class="mb-0">
+                                                از داشبورد پنل کاربری می توانید به سفارش های خود و کالا های مورد علاقه دسترسی داشته باشید . همچنین می توانید اطلاعات حساب خود شامل شماره همراه ، آدرس و رمز عبور را ویرایش کنید .
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="orders" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3 class="title">تاریخچه</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th>شماره</th>
+                                                        <th>نام</th>
+                                                        <th>مبلغ</th>
+                                                        <th>آدرس</th>
+                                                        <th>وضعیت</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for i in data %}
+                                                        <tr>
+                                                            <td>{{forloop.counter}}</td>
+                                                            <td>{{ i.product.name }}</td>
+                                                            <td>{{ i.order.get_price }}</td>
+                                                            <td>{{ i.order.address }}</td>
+                                                            {% if i.order.paid == True %}
+                                                            <td>پرداخت شده</td>
+                                                            {% else %}
+                                                            <td>پرداخت نشده</td>
+                                                            {% endif %}
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="download" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3 class="title">علاقه مندی ها</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>تصویر</th>
+                                                        <th>نام کالا</th>
+                                                        <th>اطلاعات کالا</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for i in product %}
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td><img src="{{ i.image.url }}" style="width: 200px;height: 200px" alt="{{ i.name }}"></td>
+                                                        <td>{{ i.name }}</td>
+                                                        <td><a href="{% url 'home:detail' i.id %}"
+                                                               class="btn btn btn-dark btn-hover-primary rounded-0"><i
+                                                                class="fa fa-cloud-download me-1"></i> اطلاعات کالا</a>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="address-edit" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3 class="title">اطلاعات حساب</h3>
+                                            <address>
+                                                <!--<div>-->
+                                                <!--    <p class="fw-bold"> نام کاربری</p>-->
+                                                <!--    <p class="text-center">{{ profile.user.username }}</p>-->
+                                                <!--</div>-->
+                                                <div>
+                                                    <p class="fw-bold">نام</p>
+                                                    <p class="text-center">{{ profile.user.first_name }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="fw-bold">نام خانوادگی</p>
+                                                    <p class="text-center">{{ profile.user.last_name }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="fw-bold">همراه</p>
+                                                    {% if profile.phone == None %} <p class="text-center"> لطفا دکمه ویرایش اطلاعات را فشار دهید و این قسمت را تکمیل کنید.</p> {% else  %} <p class="text-center"> {{ profile.phone }}</p>  {% endif %}
+                                                
+                                                <!--<div>-->
+                                                <!--    <p class="fw-bold">ایمیل</p>-->
+                                                <!--    <p class="text-center">{{ profile.user.email }}</p></div>-->
+                                                <!--<div>-->
+                                                    <p class="fw-bold">آدرس</p>
+                                                    {% if profile.address == None %} <p class="text-center"> لطفا دکمه ویرایش اطلاعات را فشار دهید و این قسمت را تکمیل کنید.</p> {% else  %} <p class="text-center"> {{ profile.address }}</p>  {% endif %}
+                                                </div>
+                                                
+                                            </address>
+                                            <div class="d-flex justify-content-center ">
+                                                <a href="{% url 'accounts:update' %}" class="btn btn btn-dark btn-hover-primary rounded-0"><i
+                                                    class="fa fa-edit ms-2"></i>ویرایش اطلاعات</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Single Tab Content End -->
+
+                                    <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="account-info" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3 class="title">جزئیات حساب</h3>
+                                            <div class="account-details-form">
+                                                <form action="#">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="first-name" class="required mb-2">نام</label>
+                                                                <input type="text" id="first-name"
+                                                                       placeholder="First Name"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item mb-3">
+                                                                <label for="last-name" class="required mb-2">نام خانوادگی</label>
+                                                                <input type="text" id="last-name"
+                                                                       placeholder="Last Name"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="single-input-item mb-3">
+                                                        <label for="display-name" class="required mb-2">Display
+                                                            Name</label>
+                                                        <input type="text" id="display-name"
+                                                               placeholder="Display Name"/>
+                                                    </div>
+                                                    <!--<div class="single-input-item mb-3">-->
+                                                    <!--    <label for="email" class="required mb-1">ایمیل</label>-->
+                                                    <!--    <input type="email" id="email" placeholder="Email Address"/>-->
+                                                    <!--</div>-->
+                                                    <!--<fieldset>-->
+                                                    <!--    <legend>تفییر رمز</legend>-->
+                                                    <!--    <div class="single-input-item mb-3">-->
+                                                    <!--        <label for="current-pwd" class="required mb-2">رمز کنونی</label>-->
+                                                    <!--        <input type="password" id="current-pwd"-->
+                                                    <!--               placeholder="Current Password"/>-->
+                                                    <!--    </div>-->
+                                                    <!--    <div class="row mb-n3">-->
+                                                    <!--        <div class="col-lg-6">-->
+                                                    <!--            <div class="single-input-item mb-3">-->
+                                                    <!--                <label for="new-pwd" class="required mb-2">رمز جدید</label>-->
+                                                    <!--                <input type="password" id="new-pwd"-->
+                                                    <!--                       placeholder="New Password"/>-->
+                                                    <!--            </div>-->
+                                                    <!--        </div>-->
+                                                    <!--        <div class="col-lg-6">-->
+                                                    <!--            <div class="single-input-item mb-3">-->
+                                                    <!--                <label for="confirm-pwd" class="required mb-2">تایید رمز جدید</label>-->
+                                                    <!--                <input type="password" id="confirm-pwd"-->
+                                                    <!--                       placeholder="Confirm Password"/>-->
+                                                    <!--            </div>-->
+                                                    <!--        </div>-->
+                                                    <!--    </div>-->
+                                                    <!--</fieldset>-->
+                                                    <div class="single-input-item single-item-button mt-6">
+                                                        <button class="btn btn btn-primary btn-hover-dark rounded-0">
+                                                            ثبت تغییرات
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div> <!-- Single Tab Content End -->
+
+                                </div>
+                            </div>
+                            <!-- My Account Tab Content End -->
+
+                        </div>
+                    </div>
+                    <!-- My Account Page End -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- My Account Section End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <div class="col-4">#}
+{##}
+{#                <div class="side-menu">#}
+{#                    <div class="image-container">#}
+{#                        <img src="{{ profile.profile_image.url }}" style="width: 200px;height: 200px" alt="">#}
+{#                    </div>#}
+{##}
+{#                    <a href="{% url 'accounts:profile' %}">Profile</a>#}
+{#                    <a href="{% url 'accounts:update' %}">Update</a>#}
+{#                    <a href="{% url 'accounts:change' %}">Change Password</a>#}
+{#                    <a href="{% url 'accounts:history' %}">History</a>#}
+{#                    <a href="{% url 'accounts:favourite' %}">Favourites</a>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-8">#}
+{#                <div class="profile">#}
+{#                    <div class="card-body">#}
+{#                        <h6 class="card-subtitle mb-2 text-muted">user : {{ profile.user.username }}</h6>#}
+{#                        <h6 class="card-subtitle mb-2 text-muted">name : {{ profile.user.first_name }}</h6>#}
+{#                        <h6 class="card-subtitle mb-2 text-muted">lastname : {{ profile.user.last_name }}</h6>#}
+{#                        <h6 class="card-subtitle mb-2 text-muted">email : {{ profile.user.email }}</h6>#}
+{#                        <h6 class="card-subtitle mb-2 text-muted">phone : {{ profile.phone }}</h6>#}
+{#                        <h6 class="card-subtitle mb-2 text-muted">address : {{ profile.address }}</h6>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#    </div>#}
+
+
+
+
+
+
+
+     <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+    <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+               <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="#">آموزش(به زودی)</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+{% endblock %}
+

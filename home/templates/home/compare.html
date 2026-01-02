@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}
+    مقایسه محصولات
+{% endblock %}
+{% block body %}
+
+  <!-- Wishlist Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="wishlist-table table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="pro-thumbnail">تصویر</th>
+                                    <th class="pro-title">نام محصول</th>
+                                    <th class="pro-price price">قیمت</th>
+                                    <th class="pro-stock">برند</th>
+                                    <th class="pro-cart">امتیاز</th>
+                                    <th class="pro-remove">حذف</th>
+                                </tr>
+                            </thead>
+                            {% for i in data %}
+                            <tbody>
+                                <tr>
+                                    <td class="pro-thumbnail"><a href="{% url 'home:detail' i.id %}"><img class="fit-image" src="{{ i.product.image.url }}" alt="Product" /></a></td>
+                                    <td class="pro-title"><a href="{% url 'home:detail' i.id %}">{{ i.product.name }}</a></td>
+                                    <td class="pro-price price"><span>${{ i.product.total_price }}</span></td>
+                                    <td class="pro-stock"><span>{{ i.product.brand }}</span></td>
+                                    <td class="pro-stock"><div class="rating"><span>{{ i.product.average }}</span><i class="fa fa-star"></i></div></td>
+                                    <td class="pro-remove"><a href="{% url 'home:remove' i.product.id %}"><i class="ti-trash"></i></a></td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <!-- Cart Button Start -->
+                    <div class="cart-button-section mb-n4">
+
+                        <!-- Cart Button left Side Start -->
+                        <div class="cart-btn-lef-side mb-4">
+                            <a href="{% url 'home:product' %}" class="btn btn btn-gray-deep btn-hover-primary">افزودن کالا
+                                </a>
+                        </div>
+                        <!-- Cart Button left Side End -->
+
+
+                    </div>
+                    <!-- Cart Button End -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Wishlist Section End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+     <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="{% url 'home:blog_list' %}">آموزش</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#    <div class="container">#}
+{#        <div class="card bg-dark mt-5 p-5">#}
+{#            {% for i in data %}#}
+{#                <p>{{ i.product.name }}</p>#}
+{#                <a href="{% url 'home:remove' i.product.id %}">remove compare</a>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+    <script>
+    let prices = document.querySelectorAll(".price");
+    prices.forEach((price) => {
+        price.innerHTML = price.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
+</script>
+{% endblock %}

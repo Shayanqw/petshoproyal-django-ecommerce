@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+    phone page
+{% endblock %}
+{% block body %}
+    <h1>welcome to phone page</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type= "submit">send code</button>
+    </form>
+
+
+{% endblock %}

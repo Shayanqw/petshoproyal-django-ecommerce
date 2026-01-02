@@ -1,0 +1,55 @@
+/*.side-menu {*/
+/*    position: fixed;*/
+/*    background:darkslategrey;*/
+/*    width: 250px;*/
+/*    height: 100%;*/
+
+/*}*/
+
+/*.side-menu a {*/
+/*    list-style: none;*/
+/*    text-decoration: none;*/
+/*    display: block;*/
+/*    color:darkorange;*/
+/*    line-height: 50px;*/
+/*    margin-left: 10px;*/
+/*    font-size: 18px;*/
+/*    font-weight: 500;*/
+
+/*}*/
+
+/*.side-menu a:hover {*/
+/*    background:#333333;*/
+/*    color:goldenrod ;*/
+/*}*/
+
+/*.image-container {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*}*/
+/*.image-container img {*/
+/*    width: 120px;*/
+/*    border-radius: 50%;*/
+/*    margin-top: 30px;*/
+/*    border: 3px solid white;*/
+
+/*}*/
+
+/*.side-menu center h1 {*/
+/*    color: white;*/
+/*}*/
+/*.data {*/
+/*    margin-top: 2%;*/
+
+/*}*/
+/*.card{*/
+/*    margin-top: 100px;*/
+/*    padding: 30px;*/
+/*    width: 70%;*/
+/*    background-color: #262626;*/
+/*}*/
+/*.card-body h6 {*/
+/*    font-size: 24px ;*/
+/*    line-height: 40px;*/
+/*}*/
+

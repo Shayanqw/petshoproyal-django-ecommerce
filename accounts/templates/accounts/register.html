@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+   ثبت نام
+{% endblock %}
+
+{% block css %}
+{#    <link rel="stylesheet" href="{% static 'accounts/register.css' %}">#}
+{% endblock %}
+
+
+{% block body %}
+
+
+<!-- Register Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 col-md-8 m-auto">
+                    <div class="login-wrapper">
+
+                        <!-- Register Title & Content Start -->
+                        <div class="section-content text-center mb-6">
+                            <h2 class="title mb-2">ثبت نام</h2>
+                        </div>
+                        <!-- Register Title & Content End -->
+
+                        <!-- Form Action Start -->
+                        <form method="post">
+                            {% csrf_token %}
+
+                             <!-- Input first name Start -->
+                            <div class="single-input-item mb-2">
+                                <input type="text" name="first_name" maxlength="10" minlength="3" required="" id="id_first_name" placeholder=" نام خود را وارد نمایید ، نام شما باید حداقل سه کاراکتر باشد .">
+                            </div>
+                            <!-- Input first name End -->
+
+
+                            <!-- Input last name Start -->
+                            <div class="single-input-item mb-2">
+                                <input type="text" name="last_name" maxlength="200" required="" id="id_last_name" placeholder=" نام خانوادگی خود را وارد نمایید .">
+                            </div>
+                            <!-- Input last name End -->
+
+
+
+                            
+
+                            <div class="single-input-item mb-2">
+                                <input type="text" name="phone"  required="" id="id_phone" placeholder="تلفن همراه خود را وارد نمایید .">
+                            </div>
+
+                            <!-- Input email End -->
+                            <div class="col-md-12 mb-3">
+                                <div class="search-container" style="position:relative">
+                                  <input type="text" name="otpcode" maxlength="30" required=""   id="id_otpcode" class="form-control search-input" style="height: 50px;border-radius:5px;padding-left: 35px;" placeholder="دکمه دریافت رمز یکبار مصرف را فشار دهید">
+                                        <button  id="smsButton"  type="button" onclick="smshandler()" class="btn btn-gray-deep btn-hover-primary" style="padding:10px; position: absolute;top: 50%;left: 15px;transform: translateY(-50%);">
+                                        دریافت رمز
+                                        </button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3 d-flex justify-content-rigth"  id="errorotp">
+
+                            </div>
+                            <!-- Input Password Start -->
+                            <!-- Input Password End -->
+                               {#  {{ profile_form }}#}
+
+
+                            <!-- Button/Forget Password Start -->
+                            <div class="single-input-item">
+                                <div class="login-reg-form-meta mb-n3">
+                                    <button type="submit" class="btn btn btn-gray-deep btn-hover-primary mb-3">ثبت نام</button>
+                                </div>
+                            </div>
+                            <!-- Button/Forget Password End -->
+                        </form>
+                        <!-- Form Action End -->
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+    <!-- Register Section End -->
+
+
+
+
+
+
+ <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+     <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="#">آموزش(به زودی)</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#    <h1>welcome to register page</h1>#}
+{#    <form method="post" novalidate>#}
+{#    {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#    <button type="submit">register</button>#}
+{#    </form>#}
+<script> 
+function updateButtonText(timeLeft) {
+    const button = document.getElementById("smsButton");
+    if (timeLeft > 0) {
+        button.innerHTML = `⏳ ${timeLeft} ثانیه`;  // Clock with time
+    } else {
+        button.innerHTML = "ارسال مجدد";  // Resend message
+    }
+}
+let countdown = 60;  // Declare countdown globally
+let countdownTimer;
+
+// Function to start countdown
+function startCountdown() {
+    countdownTimer = setInterval(() => {
+        countdown--;
+        updateButtonText(countdown);
+        
+        // When countdown reaches 0, reset button and enable it
+        if (countdown <= 0) {
+            clearInterval(countdownTimer);
+            countdown = 60;  // Reset countdown for next use
+            document.getElementById("smsButton").disabled = false;
+        }
+    }, 1000);
+}
+    function smshandler(){
+        let phone = document.getElementById("id_phone").value;  // Get phone number from input field
+        console.log(phone);
+        if (validatePhoneNumber(phone)  ){
+            document.getElementById("errorotp").innerHTML = ""   ;
+            document.getElementById("smsButton").disabled = true;  // Disable button
+            $.ajax({
+                url: "/accounts/otpregister/",  // Django URL to handle the request
+                type: "POST",
+                data: {
+                    phone: phone,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() // CSRF token
+                },
+                success: function (response) {
+                    
+                    setTimeout(() => {
+                        // Assuming the SMS is sent successfully
+                        startCountdown();
+                    }, 1000);
+                },
+                error: function (xhr, status, error) {
+                    var response = JSON.parse(xhr.responseText);  // Parse the JSON response
+                    var errorMessage = response.message || "An error occurred";  // Extract the message
+                      document.getElementById("errorotp").innerHTML = "<p class='text-danger '> " + errorMessage + "</p> "   ;
+                    document.getElementById("smsButton").disabled = false;   
+                }
+            });
+        }
+        else{
+            document.getElementById("errorotp").innerHTML = "<p class='text-danger '> شماره همراه وارد شده صحیح نمی باشد  </p> "   ;
+        }
+         
+    }    
+    function validatePhoneNumber(phone) {
+    const phoneRegex = /^09\d{9}$/;
+    return phoneRegex.test(phone);
+}
+
+</script>
+{% endblock %}

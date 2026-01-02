@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% block title %}
+    تماس با ما
+{% endblock %}
+{% block body %}
+    <!-- Contact Us Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+
+            <div class="row mb-n10">
+                <div class="col-12 col-lg-6 mb-10 order-2 order-lg-1" data-aos="fade-up" data-aos-duration="1000">
+
+                    <!-- Section Title Start -->
+                    <div class="contact-title pb-3">
+                        <h2 class="title">ارتباط مستقیم</h2>
+                    </div>
+                    <!-- Section Title End -->
+
+                    <!-- Contact Form Wrapper Start -->
+                    <div class="contact-form-wrapper contact-form">
+                        <form method="post" action="{% url 'home:contact' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="input-area mb-4">
+                                                <input class="input-item" type="text" name="subject" class="form-control" placeholder="موضوع">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="input-area mb-4">
+                                                <input class="input-item" type="email" name="email" class="form-control" placeholder="ایمیل">
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-12">
+                                            <div class="input-area mb-8">
+                                                <textarea class="textarea-item" name="message" class="form-control" placeholder="متن ... " cols="30" rows="5"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <button type="submit" id="submit" name="submit" class="btn btn-primary btn-hover-dark">ارسال پیام</button>
+                                        </div>
+                                        <p class="col-8 form-message mb-0"></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="form-messege"></p>
+                    </div>
+                    <!-- Contact Form Wrapper End -->
+
+                </div>
+                <div class="col-12 col-lg-6 mb-10 order-1 order-lg-2" data-aos="fade-up" data-aos-duration="1500">
+                    <!-- Section Title Start -->
+                    <div class="contact-title pb-3">
+                        <h2 class="title">تماس با ما</h2>
+                    </div>
+                    <!-- Section Title End -->
+                    <div class="contact-content">
+                        <p>
+                            همراهان همیشگی پت شاپ رویال ، شما می توانید از طریق راه های ارتباطی زیر برای بیان انتقادات و پیشنهادات خود با ما تماس بگیرید.
+                        </p>
+                        <address class="contact-block">
+                            <ul>
+                                <li ><i class="fa fa-fax mx-1"></i> تهران - مرزداران غربی - 35 متری لاله - لاله نهم - بن بست ستایش - ساختمان دریا - واحد 1 </li>
+                                <li><i class="fa fa-phone"></i> <a  class="mx-1">0919-877-1017</a></li>
+                                <li><i class="fa fa-envelope-o"></i> <a  class="mx-1">petshoproyal.co@gmail.com </a></li>
+                            </ul>
+                        </address>
+
+                        <div class="working-time">
+                            <h6 class="title">ساعات کاری</h6>
+                            <p> 11 ظهر تا 8 شب </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-n10 mt-4">
+                <div class="col-12 col-lg-12 mb-10 order-2 order-lg-1 mil-map-frame mil-up" data-aos="fade-up" data-aos-duration="1000">
+
+                    <!-- Section Title Start -->
+                    <div class="contact-title pb-3">
+                        <h2 class="title">مکان یابی</h2>
+                    </div>
+                    <!-- Section Title End -->
+
+                    <!-- Contact Form Wrapper Start -->
+                    <div class="mil-map" style="width: 100%; height:50vh">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3238.5987301761947!2d51.34194300000001!3d35.73608600000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDQ0JzA5LjkiTiA1McKwMjAnMzEuMCJF!5e0!3m2!1sen!2s!4v1736276939352!5m2!1sen!2s"
+                                style="border:0; width: 100%; height:100%" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <!-- Contact Form Wrapper End -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Contact us Section End -->
+
+
+
+
+ <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+    <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="{% url 'home:blog_list' %}">آموزش</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+
+
+
+
+
+
+
+
+{#    <div class="container">#}
+{#        <div class="card bg-dark mt-5 p-5">#}
+{#            <form method="post" action="{% url 'home:contact' %}">#}
+{#                {% csrf_token %}#}
+{#                <h1 class="text-center" style="color: goldenrod">تماس با ما</h1>#}
+{#                <div class="row mt-3">#}
+{#                    <div class="col-6">#}
+{#                        <input type="text" name="subject" class="form-control" placeholder="subject...">#}
+{#                    </div>#}
+{#                    <div class="col-6">#}
+{#                        <input type="email" name="email" class="form-control" placeholder="email...">#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row mt-3">#}
+{#                    <textarea name="message" class="form-control" placeholder="message" rows="4"></textarea>#}
+{#                </div>#}
+{#                <button type="submit" class="btn btn-danger mt-3">ارسال ایمیل</button>#}
+{##}
+{#            </form>#}
+{#        </div>#}
+{#    </div>#}
+{% endblock %}

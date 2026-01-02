@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% load static%}
+{% block css %}
+    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.css">
+{#    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>#}
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/persian-date.js' %}"></script>
+    <script src="{% static 'assets/js/persian-date.min.js' %}"></script>
+    <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.js"></script>
+    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.js"></script>
+    <script>
+        $(document).ready(function () {
+           console.log('salam')
+        });
+    </script>
+{% endblock %}
+{% block title %}
+    خرید نهایی
+{% endblock %}
+{% block body %}
+    <!-- Checkout Section Start -->
+    <div class="section section-margin">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-12">
+                    <!-- Checkbox Form Title Start -->
+                            <h3 class="title text-center mb-3">اطلاعات سفارش </h3>
+                            <!-- Checkbox Form Title End -->
+                    
+                    <!-- Coupon Accordion Start -->
+                    <div class="coupon-accordion">
+                        
+
+
+                        <!-- Title Start -->
+                        <h3 class="title text-center d-flex flex-column align-items-center justify-content-center">
+                            <p class="text-danger fw-bolder price"> مبلغ نهایی {{ order.get_price }}   تومان </p>
+                            <p>{% if order.city.name == 'تهران' %}
+                            {% else %}
+                                {% if delivery_price %}
+                                {{ delivery_price|intcomma }} تومان برای پست اضافه شد
+                                    {% endif %}
+                            {% endif %}
+                            </p>
+                            <span id="showcoupon" class="mt-1">اگر کد تخفیف دارید اینجا  کلیک کنید .</span>
+                        </h3>
+                        <!-- Title End -->
+                        <!-- Checkout Coupon Start -->
+                        <div id="checkout_coupon" class="coupon-checkout-content">
+                            <div class="coupon-info">
+                                <form method="post" action="{% url 'order:coupon' order.id %}">
+                                    {% csrf_token %}
+                                    <p class="checkout-coupon d-flex">
+                                        <input type="text" name="code" maxlength="100" required=""
+                                               placeholder="کد تخفیف" id="id_code">
+                                        <button class="btn btn-primary btn-hover-dark rounded-0" value="Apply Coupon"
+                                                type="submit">اعمال تخفیف
+                                        </button>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Checkout Coupon End -->
+                        <!--<h3 class="title text-center d-flex flex-column align-items-center justify-content-center"><p-->
+                        <!--        class="text-primary">لطفا مبلغ نهایی را به به شماره کارت زیر به نام مرتضی علوی کارت به-->
+                        <!--    کارت کنید و جدول اطلاعات پرداخت را تکمیل نمایید . </p>-->
+                        <!--    <p class="text-dark fw-bolder mt-1">6104-3389-1241-3941</p></h3>-->
+                        {#                        <a class="btn btn btn-gray-deep btn-hover-primary mt-6" href="{% url 'order:request' order.id order.get_price %}" >پرداخت</a>#}
+                    </div>
+                    <!-- Coupon Accordion End -->
+                </div>
+            </div>
+            <div class="row mt-10 mx-auto">
+                <div class="col-lg-12 col-9 mb-4">
+
+                    <!-- Checkbox Form Start -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="checkbox-form d-flex flex-column justify-content-center">
+
+                            
+
+                            <div class="row d-flex flex-column justify-content-center">
+                                <!-- First Name Input Start -->
+{#                                <div class="col-md-6">#}
+{#                                    <div class="checkout-form-list">#}
+{#                                        <label>چهار رقم آخر شماره کارت مبدا <span class="required">*</span></label>#}
+{#                                        <input required name="creditNumberCard" type="number" id="id_creditNumberCard"#}
+{#                                               class="form-control"#}
+{#                                               placeholder="مثال : 4587">#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <!-- First Name Input End -->#}
+{##}
+{#                                <!-- Last Name Input Start -->#}
+{#                                <div class="col-md-6">#}
+{#                                    <div class="checkout-form-list">#}
+{#                                        <label>  تاریخ و ساعت<span class="required">( اختیاری است )</span></label>#}
+{#                                        <input class="alaki" type="text"/>#}
+{#                                        <input  name="date" class="form-control normal-example"#}
+{#                                               id="id_date">#}
+{#                                    </div>#}
+{#                                </div>#}
+                                <!-- Last Name Input End -->
+
+
+                                <!-- Postcode or Zip Input Start -->
+{#                                <div class="col-md-6">#}
+{#                                    <div class="checkout-form-list">#}
+{#                                        <label>ساعت <span class="required">*</span></label>#}
+{#                                        <input required name="time" class="form-control" maxlength="10" minlength="10"#}
+{#                                               type="time" id="id_time">#}
+{#                                    </div>#}
+{#                                </div>#}
+                                <!-- Postcode or Zip Input End -->
+                                <!-- Email Address Input Start -->
+{#                                <div class="col-md-6">#}
+{#                                    <div class="checkout-form-list">#}
+{#                                        <label>شماره پیگیری <span class="required">*</span></label>#}
+{#                                        <input required name="trackingCode" type="number"#}
+{#                                               placeholder="شماره پیگیری یا شماره ارجاع 12 رقمی" class="form-control"#}
+{#                                               id="id_trackingCode">#}
+{#                                    </div>#}
+{#                                </div>#}
+                                <!-- Email Address Input End -->
+                            </div>
+
+                        </div>
+                        <!-- Cart Checktout Button Start -->
+<!--                        <button type="submit" name="payment_method" value="cash" class="btn btn btn-gray-deep btn-hover-primary mt-6">-->
+<!--پرداخت کارت به کارت                        </button>-->
+                            <button type="submit"  class="btn btn btn-gray-deep btn-hover-primary mt-6">
+                     تایید نهایی                        </button>
+                        <!-- Cart Checktout Button End -->
+                    </form>
+                    <!-- Checkbox Form End -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Checkout Section End -->
+
+
+
+
+    <!-- Scroll Top Start -->
+    <a href="#" class="scroll-top show" id="scroll-top">
+        <i class="arrow-top ti-angle-double-up"></i>
+        <i class="arrow-bottom ti-angle-double-up"></i>
+    </a>
+    <!-- Scroll Top End -->
+
+    <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+    <div class="mobile-menu-wrapper">
+        <div class="offcanvas-overlay"></div>
+
+        <!-- Mobile Menu Inner Start -->
+        <div class="mobile-menu-inner">
+
+            <!-- Button Close Start -->
+            <div class="offcanvas-btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <!-- Button Close End -->
+
+            <!-- Mobile Menu Inner Wrapper Start -->
+            <div class="mobile-menu-inner-wrapper">
+
+
+                <!-- Mobile Menu Start -->
+                <div class="mobile-navigation">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="has-children">
+                                <a href="{% url 'home:home' %}">خانه </a>
+                            </li>
+                            {% for data in category %}
+                                <li class="has-children">
+                                    <a href="#"> {{ data.name }}<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown">
+                                        {% for info in data.sub.all %}
+                                            <li><a href="{{ info.get_absolute_url }}">{{ info.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+{#                            <li class="has-children">#}
+{#                                <a href="{% url 'home:product' %}">فروشگاه </a>#}
+{#                            </li>#}
+                            <li class="has-children">
+                                <a href="{% url 'home:blog_list' %}">آموزش</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:about' %}">درباره ما</a>
+                            </li>
+                            <li class="has-children">
+                                <a href="{% url 'home:contact' %}">تماس با ما</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+                <!-- Contact Links/Social Links Start -->
+                <div class="mt-auto bottom-0">
+
+                    <!-- Contact Links Start -->
+                    <ul class="contact-links">
+                        <li><i class="fa fa-phone"></i><a href="#" class="mx-1"> 0919-877-1017</a></li>
+                        <li><i class="fa fa-envelope-o"></i><a href="#" class="mx-1"> petshoproyal.co@gmail.com</a></li>
+                        <li><i class="fa fa-clock-o"></i> <span class="mx-1">هر روز هفته ، هر ساعت روز</span></li>
+                    </ul>
+                    <!-- Contact Links End -->
+
+                    <!-- Social Widget Start -->
+                    <div class="widget-social">
+                        <a title="Telegram" href="https://t.me/PetshopRoyal1"><i class="fa fa-telegram"></i></a>
+                        <a title="Instagram" href="https://instagram.com/petshop_royal1"><i class="icon-social-instagram"></i></a>
+                        <a title="Whatsapp" href="https://wa.link/m35ti7"><i class="fa fa-whatsapp"></i></a>
+                    </div>
+                    <!-- Social Widget Ender -->
+                </div>
+                <!-- Contact Links/Social Links End -->
+            </div>
+            <!-- Mobile Menu Inner Wrapper End -->
+
+        </div>
+        <!-- Mobile Menu Inner End -->
+    </div>
+    <!-- Mobile Menu End -->
+
+
+{#    <script src="{% static 'assets/js/order/order.js' %}"></script>#}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {#$('.normal-example').pDatepicker();#}
+            $('.normal-example').persianDatepicker({
+                observer: true,
+                timePicker: {
+                    enabled: true,
+                },
+                autoClose: true
+            });
+        });
+
+    </script>
+    <script>
+        let prices = document.querySelectorAll(".price");
+        prices.forEach((price) => {
+            price.innerHTML = price.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        });
+</script>
+{% endblock %}
