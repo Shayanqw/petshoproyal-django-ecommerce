@@ -10,11 +10,12 @@ A production‑style **Django e‑commerce** application built with server‑ren
 
 ```mermaid
 flowchart LR
-  U[User / Browser] -->|HTTP| DJ[Django App (Templates)]
-  DJ -->|ORM| DB[(SQLite (dev) / Postgres (prod))]
-  DJ -->|Uploads| MEDIA[(Media files)]
-  DJ -->|Static| STATIC[(Static assets)]
-  DJ -->|Optional| SMS[SMS Provider (Ghasedak)]
+  U["User / Browser"] -->|"HTTP"| DJ["Django App (Templates)"]
+  DJ -->|"ORM"| DB["Database (SQLite dev / Postgres prod)"]
+  DJ -->|"Uploads"| MEDIA["Media files"]
+  DJ -->|"Static"| STATIC["Static assets"]
+  DJ -. "Optional" .-> SMS["SMS Provider (Ghasedak)"]
+
 ```
 
 ---
